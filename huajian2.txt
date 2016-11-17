@@ -1,0 +1,103 @@
+[ (S*sin(L1*k)*(((cos(L2*k)*((a*sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv) - (a*cos(L3*k)*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(S^2*Sv)) + (a*sin(L2*k)*(Sv^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - S^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv))*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l)))/(S*Sv) + (a*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i)*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) + S^2*cos(k*(L2 - L3 + Lv)) - S^2*cos(k*(L3 - L2 + Lv)) - Sv^2*cos(k*(L2 - L3 + Lv)) + Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S^3*Sv^2))*i)/a - cos(L1*k)*(((S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) + S^2*cos(k*(L2 - L3 + Lv)) - S^2*cos(k*(L3 - L2 + Lv)) - Sv^2*cos(k*(L2 - L3 + Lv)) + Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S^2*Sv^2) + ((cos(L2*k)*((a*sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv) - (a*cos(L3*k)*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(S^2*Sv)) + (a*sin(L2*k)*(Sv^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - S^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv))*(Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(Sv*a)), (a*sin(L1*k)*(((S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) + S^2*cos(k*(L2 - L3 + Lv)) - S^2*cos(k*(L3 - L2 + Lv)) - Sv^2*cos(k*(L2 - L3 + Lv)) + Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S^2*Sv^2) + ((cos(L2*k)*((a*sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv) - (a*cos(L3*k)*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(S^2*Sv)) + (a*sin(L2*k)*(Sv^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - S^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv))*(Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(Sv*a))*i)/S - cos(L1*k)*(((cos(L2*k)*((a*sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv) - (a*cos(L3*k)*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(S^2*Sv)) + (a*sin(L2*k)*(Sv^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - S^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(S^2*Sv))*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l)))/(S*Sv) + (a*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i)*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) + S^2*cos(k*(L2 - L3 + Lv)) - S^2*cos(k*(L3 - L2 + Lv)) - Sv^2*cos(k*(L2 - L3 + Lv)) + Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S^3*Sv^2))]
+[                       (S*sin(L1*k)*(((S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) - S^2*cos(k*(L2 - L3 + Lv)) + S^2*cos(k*(L3 - L2 + Lv)) + Sv^2*cos(k*(L2 - L3 + Lv)) - Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S^2*Sv^2) + (a*(cos(L2*k)*((sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(Sv*a) - (cos(L3*k)*(Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(Sv*a)) + (sin(L2*k)*(S^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - Sv^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(Sv*a))*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(S^2*Sv))*i)/a - cos(L1*k)*(((cos(L2*k)*((sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(Sv*a) - (cos(L3*k)*(Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(Sv*a)) + (sin(L2*k)*(S^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - Sv^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(Sv*a))*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l)))/(S*Sv) + ((Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i)*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) - S^2*cos(k*(L2 - L3 + Lv)) + S^2*cos(k*(L3 - L2 + Lv)) + Sv^2*cos(k*(L2 - L3 + Lv)) - Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S*Sv^2*a)),                       (a*sin(L1*k)*(((cos(L2*k)*((sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(Sv*a) - (cos(L3*k)*(Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(Sv*a)) + (sin(L2*k)*(S^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - Sv^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(Sv*a))*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l)))/(S*Sv) + ((Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i)*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) - S^2*cos(k*(L2 - L3 + Lv)) + S^2*cos(k*(L3 - L2 + Lv)) + Sv^2*cos(k*(L2 - L3 + Lv)) - Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S*Sv^2*a))*i)/S - cos(L1*k)*(((S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*(S^2*cos(k*(L2 + L3 + Lv + 2*l)) + Sv^2*cos(k*(L2 + L3 + Lv + 2*l)) - S^2*cos(k*(L2 + L3 - Lv + 2*l)) - Sv^2*cos(k*(L2 + L3 - Lv + 2*l)) - S^2*cos(k*(L2 - L3 + Lv)) + S^2*cos(k*(L3 - L2 + Lv)) + Sv^2*cos(k*(L2 - L3 + Lv)) - Sv^2*cos(k*(L3 - L2 + Lv)) + 2*S*Sv*cos(k*(L2 + L3 + Lv + 2*l)) + 2*S*Sv*cos(k*(L2 + L3 - Lv + 2*l))))/(4*S^2*Sv^2) + (a*(cos(L2*k)*((sin(L3*k)*(S*Sv*cos(Lv*k) - 2*S*Sv*cos(Lv*k)*cos(k*l)^2 + S^2*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*sin(Lv*k)*cos(k*l)*sin(k*l))*i)/(Sv*a) - (cos(L3*k)*(Sv^2*sin(Lv*k)*cos(k*l)^2*i - S^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(Sv*a)) + (sin(L2*k)*(S^2*sin(L3*k)*sin(Lv*k)*cos(k*l)^2 - Sv^2*sin(L3*k)*sin(Lv*k)*sin(k*l)^2 + S*Sv*cos(L3*k)*cos(Lv*k)*sin(k*l)^2 + S^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) + Sv^2*cos(L3*k)*sin(Lv*k)*cos(k*l)*sin(k*l) - S*Sv*cos(L3*k)*cos(Lv*k)*cos(k*l)^2 + 2*S*Sv*cos(Lv*k)*sin(L3*k)*cos(k*l)*sin(k*l))*i)/(Sv*a))*(S^2*sin(Lv*k)*cos(k*l)^2*i - Sv^2*sin(Lv*k)*sin(k*l)^2*i + S*Sv*cos(Lv*k)*cos(k*l)*sin(k*l)*2*i))/(S^2*Sv))]
+ 
+
+
+
+
+ +-                                                                  -+ 
+  |  S sin(L1 k) #1 i                 a sin(L1 k) #2 i                 | 
+  |  ---------------- - cos(L1 k) #2, ---------------- - cos(L1 k) #1  | 
+  |         a                                S                         | 
+  |                                                                    | 
+  |  S sin(L1 k) #3 i                 a sin(L1 k) #4 i                 | 
+  |  ---------------- - cos(L1 k) #4, ---------------- - cos(L1 k) #3  | 
+  |         a                                S                         | 
+  +-                                                                  -+ 
+   
+  where 
+   
+           #6 #15   a #10 #5 
+     #1 == ------ + -------- 
+            S Sv       3   2 
+                    4 S  Sv 
+   
+           #15 #5   #6 #16 
+     #2 == ------ + ------ 
+             #7      Sv a 
+   
+           #15 #8   a #9 #10 
+     #3 == ------ + -------- 
+             #7       2 
+                     S  Sv 
+   
+           #9 #15    #16 #8 
+     #4 == ------ + --------- 
+            S Sv          2 
+                    4 S Sv  a 
+   
+            2         2        2         2        2        2         2         2 
+     #5 == S  #12 + Sv  #12 - S  #11 - Sv  #11 + S  #14 - S  #13 - Sv  #14 + Sv  #13 + 2 S Sv #12 + 2 S Sv #11 
+   
+                     / a sin(L3 k) #15 i   a cos(L3 k) #10 \ 
+     #6 == cos(L2 k) | ----------------- - --------------- | + 
+                     |        2                  2         | 
+                     \       S  Sv              S  Sv      / 
+   
+                                                2                                               2 
+        a sin(L2 k) (#18 - sin(L3 k) sin(Lv k) S  #23 - #21 + #19 + #20 + sin(L3 k) sin(Lv k) Sv  #24 + #17) i 
+        ------------------------------------------------------------------------------------------------------ 
+                                                         2 
+                                                        S  Sv 
+   
+              2   2 
+     #7 == 4 S  Sv 
+   
+            2         2        2         2        2        2         2         2 
+     #8 == S  #12 + Sv  #12 - S  #11 - Sv  #11 - S  #14 + S  #13 + Sv  #14 - Sv  #13 + 2 S Sv #12 + 2 S Sv #11 
+   
+                     / sin(L3 k) #15 i   cos(L3 k) #16 \ 
+     #9 == cos(L2 k) | --------------- - ------------- | + 
+                     \      Sv a             Sv a      / 
+   
+                                        2                                                           2 
+        sin(L2 k) (sin(L3 k) sin(Lv k) S  #24 + #18 - #21 + #19 + #20 + #17 - sin(L3 k) sin(Lv k) Sv  #23) i 
+        ---------------------------------------------------------------------------------------------------- 
+                                                        Sv a 
+   
+                         2                           2 
+     #10 == i sin(Lv k) S  #24 + #22 - i sin(Lv k) Sv  #23 
+   
+     #11 == cos(k (L2 + L3 - Lv + 2 l)) 
+   
+     #12 == cos(k (L2 + L3 + Lv + 2 l)) 
+   
+     #13 == cos(k (L3 - L2 + Lv)) 
+   
+     #14 == cos(k (L2 - L3 + Lv)) 
+   
+                                2                                                                         2 
+     #15 == sin(Lv k) sin(k l) S  cos(k l) - 2 cos(Lv k) S Sv #24 + cos(Lv k) S Sv + sin(Lv k) sin(k l) Sv  cos(k l) 
+   
+                               2                     2 
+     #16 == #22 - i sin(Lv k) S  #23 + i sin(Lv k) Sv  #24 
+   
+                                  2 
+     #17 == cos(L3 k) sin(Lv k) Sv  cos(k l) sin(k l) 
+   
+                                 2 
+     #18 == cos(L3 k) sin(Lv k) S  cos(k l) sin(k l) 
+   
+     #19 == 2 cos(Lv k) sin(L3 k) S Sv cos(k l) sin(k l) 
+   
+     #20 == cos(L3 k) cos(Lv k) S Sv #23 
+   
+     #21 == cos(L3 k) cos(Lv k) S Sv #24 
+   
+     #22 == 2 i cos(Lv k) S Sv cos(k l) sin(k l) 
+   
+                    2 
+     #23 == sin(k l) 
+   
+                    2 
+     #24 == cos(k l)
