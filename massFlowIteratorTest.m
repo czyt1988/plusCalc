@@ -29,7 +29,7 @@ set(gcf,'color','w');
 
 
 %% 改变转速对其影响
-rcv = 0.4;% 相对余隙容积
+rcv = 0.11;% 相对余隙容积
 pressureRadio=1.5;%压力比（排气压力/吸气压力）
 outDensity =1.293*pressureRadio;% 1.9167;%%环境25度绝热压缩到0.2的温度对应密度
 rpm = 200:10:500;

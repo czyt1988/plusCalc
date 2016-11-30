@@ -1,7 +1,8 @@
-%% 迭代穿孔长度，也就是迭代开孔率
+%% 迭代la1，开孔率不变
 clc;
 close all;
 clear;
+
 currentPath = fileparts(mfilename('fullpath'));
 %缓冲罐中间插入孔管,两端堵死，开孔个数不足以等效为亥姆霍兹共鸣器(缓冲罐入口偏置)
 %                 L1
@@ -42,7 +43,6 @@ Fs = 4096;
 
 [FreRaw,AmpRaw,PhRaw,massFlowERaw] = frequencySpectrum(detrend(massFlowRaw,'constant'),Fs);
 FreRaw = [7,14,21,28,14*3];
-% massFlowERaw = [0.02,0.2,0.02,0.04,0.025];
 massFlowERaw = [0.02,0.2,0.03,0.003,0.007];
 
 % 提取主要频率
@@ -89,13 +89,15 @@ variant_n2 = [24];
 variant_dp1 = [0.013];
 variant_dp2 = [0.013];
 variant_Din = [0.098/2];
-variant_lp1 = [0.08;0.16;0.24;0.32;0.40;0.48];
-variant_lp2 = [0.08;0.16;0.24;0.32;0.40;0.48];
+variant_lp1 = [0.16];
+variant_lp2 = [0.16];
+variant_lb2 = [0.01;0.06;0.11;0.16;0.21;0.26;0.31];
+variant_la2 = [0.06;0.06;0.06;0.06;0.06;0.06;0.06];
 % variant_Lv1 = 0.568:0.02:0.84;
 calcDatas = {};
 
 
-for i = 1:length(variant_lp1)     
+for i = 1:length(variant_lb2)     
     para(i).opt = opt;
     para(i).L1 = 3.5;%L1(m)
     para(i).L2 = 6;%L2（m）长度
@@ -103,32 +105,31 @@ for i = 1:length(variant_lp1)
     para(i).vhpicStruct.l = 0.01;
     para(i).vhpicStruct.Dv = 0.372;%缓冲罐的直径（m）
     para(i).vhpicStruct.Lv = 1.1;%缓冲罐总长 
-    para(i).vhpicStruct.Lv1 =para(i).vhpicStruct.Lv./2;%缓冲罐腔1总长
+    para(i).vhpicStruct.Lv1 = para(i).vhpicStruct.Lv./2;%缓冲罐腔1总长
     para(i).vhpicStruct.Lv2 = para(i).vhpicStruct.Lv-para(i).vhpicStruct.Lv1;%缓冲罐腔2总长
     para(i).vhpicStruct.lc = 0.005;%内插管壁厚
     para(i).vhpicStruct.dp1 = variant_dp1;%开孔径
     para(i).vhpicStruct.dp2 = variant_dp2;%开孔径
-%     para(i).vhpicStruct.Lin = 0.25;%内插管入口段长度
-    para(i).vhpicStruct.lp1 = variant_lp1(i);%内插管入口段非孔管开孔长度
-    para(i).vhpicStruct.lp2 = variant_lp2(i);%内插管出口段孔管开孔长度
+    para(i).vhpicStruct.Lin = 0.25;%内插管入口段长度
+    %para(i).vhpicStruct.Lout = 0.25;
+    para(i).vhpicStruct.lp1 = variant_lp1;%内插管入口段非孔管开孔长度
+    para(i).vhpicStruct.lp2 = variant_lp2;%内插管出口段孔管开孔长度
     para(i).vhpicStruct.n1 = variant_n1;%入口段孔数
     para(i).vhpicStruct.n2 = variant_n2;%出口段孔数
-    para(i).vhpicStruct.la1 = 0.03;%孔管入口段靠近入口长度
-    para(i).vhpicStruct.lb2 = 0.06;
-    para(i).vhpicStruct.la2 = 0.06;
-    para(i).vhpicStruct.lb1 = 0.03;
+    para(i).vhpicStruct.la2 = variant_la2(i);%孔管入口段靠近入口长度
+    para(i).vhpicStruct.lb2 = variant_lb2(i);
+    para(i).vhpicStruct.la1 = 0.03;%para(i).vhpicStruct.Lin-variant_la2(i)-variant_lp1;
+    para(i).vhpicStruct.lb1 = 0.06;%para(i).vhpicStruct.Lout-variant_lb2(i)-variant_lp2;
+    para(i).vhpicStruct.Lout = variant_lb2(i)+variant_lp2+para(i).vhpicStruct.lb1;
     para(i).vhpicStruct.Din = variant_Din;
-%     para(i).vhpicStruct.Lout = 0.25;
-    para(i).vhpicStruct.Lin = para(i).vhpicStruct.la1+para(i).vhpicStruct.lp1+para(i).vhpicStruct.la2;
-    para(i).vhpicStruct.Lout = para(i).vhpicStruct.lb1+para(i).vhpicStruct.lp2+para(i).vhpicStruct.lb2;
-    para(i).vhpicStruct.bp1 = variant_n1.*(variant_dp1)^2./(4.*variant_Din.*variant_lp1(i));%开孔率
-    para(i).vhpicStruct.bp2 = variant_n2.*(variant_dp2)^2./(4.*variant_Din.*variant_lp2(i));%开孔率
+    para(i).vhpicStruct.bp1 = variant_n1.*(variant_dp1)^2./(4.*variant_Din.*variant_lp1);%开孔率
+    para(i).vhpicStruct.bp2 = variant_n2.*(variant_dp2)^2./(4.*variant_Din.*variant_lp2);%开孔率
     para(i).vhpicStruct.nc1 = 8;%假设一圈有8个孔
     para(i).vhpicStruct.nc2 = 8;%假设一圈有8个孔
     para(i).vhpicStruct.Cloum1 = variant_n1./para(i).vhpicStruct.nc1;%计算一端固定开孔长度的孔管上能开多少圈孔
     para(i).vhpicStruct.Cloum2 = variant_n2./para(i).vhpicStruct.nc2;
-    para(i).vhpicStruct.s1 = ((variant_lp1(i)./para(i).vhpicStruct.Cloum1)-variant_dp1)./2;%相邻两开孔之间间隔，默认等间隔
-    para(i).vhpicStruct.s2 = ((variant_lp2(i)./para(i).vhpicStruct.Cloum2)-variant_dp2)./2;
+    para(i).vhpicStruct.s1 = ((variant_lp1./para(i).vhpicStruct.Cloum1)-variant_dp1)./2;%相邻两开孔之间间隔，默认等间隔
+    para(i).vhpicStruct.s2 = ((variant_lp2./para(i).vhpicStruct.Cloum2)-variant_dp2)./2;
     para(i).vhpicStruct.sc1 = (pi.*variant_Din - para(i).vhpicStruct.nc1.*para(i).vhpicStruct.dp1)./para(i).vhpicStruct.nc1;%一周开孔，相邻孔间距
     para(i).vhpicStruct.sc2 = (pi.*variant_Din - para(i).vhpicStruct.nc2.*para(i).vhpicStruct.dp2)./para(i).vhpicStruct.nc2;
     l = para(i).vhpicStruct.lp1;
@@ -149,7 +150,7 @@ for i = 1:length(variant_lp1)
             ,para(i).vhpicStruct.Lin,para(i).vhpicStruct.la1,para(i).vhpicStruct.la2...
             ,sum(para(i).vhpicStruct.xSection1),variant_dp2);
     end
-    name{i} = sprintf('lp1:%g,lp2:%g',variant_lp1(i),variant_lp2(i));
+    name{i} = sprintf('lb2:%g',variant_lb2(i));
 end
 
 dcpss = getDefaultCalcPulsSetStruct();
@@ -220,7 +221,7 @@ for i = 1:length(para)
     plusClosedIB{i} = [plus1ClosedIB{i},plus2ClosedIB{i}];
     multFreAmpValueClosedIB{i} = calcWaveFreAmplitude([pressure1ClosedIB,pressure2ClosedIB],Fs,multFre,'freErr',1);
     
-    calcDatas{dataCount,1} = sprintf('入口偏置内插孔管两端堵死缓冲罐,lp1:%g,lp2:%g',variant_lp1(i),variant_lp2(i));
+    calcDatas{dataCount,1} = sprintf('入口偏置内插孔管两端堵死缓冲罐,lb2:%g',variant_lb2(i));
     calcDatas{dataCount,2} = X;
     calcDatas{dataCount,3} = plusClosedIB{i};
     calcDatas{dataCount,4} = multFreAmpValueClosedIB{i}(1,:);

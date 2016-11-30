@@ -41,20 +41,22 @@ Fs = 4096;
 %massFlow = load(fullfile(currentPath,'mass_flow_0.1478_NorthZone.txt'));
 
 [FreRaw,AmpRaw,PhRaw,massFlowERaw] = frequencySpectrum(detrend(massFlowRaw,'constant'),Fs);
+FreRaw = [7,14,21,28,14*3];
+massFlowERaw = [0.02,0.2,0.03,0.003,0.007];
 
 % 提取主要频率
-% massFlowE = massFlowERaw;
-% Fre = FreRaw;
+massFlowE = massFlowERaw;
+Fre = FreRaw;
 
-[pks,locs] = findpeaks(AmpRaw,'SORTSTR','descend');
-Fre = FreRaw(locs);
-massFlowE = massFlowERaw(locs);
-temp = [1:20];%(Fre<29) ;%| (Fre>30 & Fre < 100);
-
-massFlowE4Vessel = massFlowE;
-massFlowE = massFlowE(temp);
-Fre4Vessel = Fre;
-Fre = Fre(temp);
+% [pks,locs] = findpeaks(AmpRaw,'SORTSTR','descend');
+% Fre = FreRaw(locs);
+% massFlowE = massFlowERaw(locs);
+% temp = [1:20];%(Fre<29) ;%| (Fre>30 & Fre < 100);
+% 
+% massFlowE4Vessel = massFlowE;
+% massFlowE = massFlowE(temp);
+% Fre4Vessel = Fre;
+% Fre = Fre(temp);
 
 isDamping = 1;
 %绘图参数
@@ -66,24 +68,30 @@ opt.acousticVelocity = 345;%声速
 opt.isDamping = isDamping;%是否计算阻尼
 opt.coeffDamping = nan;%阻尼
 opt.coeffFriction = 0.04;%管道摩察系数
-VesselMeanFlowVelocity =10;%14.5;%管道平均流速
-VesselCoeffFriction = 0.04;
+SreaightMeanFlowVelocity =20;%14.5;%管道平均流速
+SreaightCoeffFriction = 0.03;
+VesselMeanFlowVelocity =8;%14.5;%缓冲罐平均流速
+VesselCoeffFriction = 0.003;
+PerfClosedMeanFlowVelocity =9;%14.5;%堵死孔管平均流速
+PerfClosedCoeffFriction = 0.04;
+PerfOpenMeanFlowVelocity =15;%14.5;%开口孔管平均流速
+PerfOpenCoeffFriction = 0.035;
 % opt.meanFlowVelocity =14.5;%14.5;%管道平均流速
 opt.isUseStaightPipe = 1;%计算容器传递矩阵的方法
 opt.mach = opt.meanFlowVelocity / opt.acousticVelocity;
 opt.notMach = 1;
 
-variant_n1 = [72];              %variant_n = [6,6];sectionNum1 =[1,6];%对应孔1的组数sectionNum2 =[1,1];%对应孔2的组数
+variant_n1 = [24];              %variant_n = [6,6];sectionNum1 =[1,6];%对应孔1的组数sectionNum2 =[1,1];%对应孔2的组数
 sectionNum1 =[1];%对应孔1的组数
 sectionNum2 =[1];%对应孔2的组数
-variant_n2 = [72];
-variant_Lv1 = 0.26:0.2:0.84;
+variant_n2 = [24];
+variant_Lv1 = 0.26:0.1:0.84;
 calcDatas = {};
 
 
 for i = 1:length(variant_Lv1)     
     para(i).opt = opt;
-    para(i).L1 = 1.5;%L1(m)
+    para(i).L1 = 3.5;%L1(m)
     para(i).L2 = 6;%L2（m）长度
     para(i).Dpipe = 0.098;%管道直径（m）
     para(i).vhpicStruct.l = 0.01;
@@ -119,8 +127,8 @@ for i = 1:length(variant_Lv1)
     para(i).vhpicStruct.xSection1 = [0,ones(1,sectionNum1).*(l/(sectionNum1))];
     l = para(i).vhpicStruct.lp2;
     para(i).vhpicStruct.xSection2 = [0,ones(1,sectionNum2).*(l/(sectionNum2))];
-    para(i).sectionL1 = 0:0.5:para(i).L1;
-    para(i).sectionL2 = 0:0.5:para(i).L2;
+    para(i).sectionL1 = 0:0.25:para(i).L1;
+    para(i).sectionL2 = 0:0.25:para(i).L2;
     para(i).vhpicStruct.lv1 = para(i).vhpicStruct.Lv./2-0.232;%232
     para(i).vhpicStruct.lv2 = 0;%出口不偏置
     para(i).vhpicStruct.Dbias = 0;%无内插管
@@ -164,7 +172,7 @@ for i = 1:length(para)
         sepratorIndex = temp(1);
         temp = straightPipePulsationCalc(massFlowE,Fre,time,straightPipeLength,straightPipeSection...
         ,'d',para(i).Dpipe,'a',opt.acousticVelocity,'isDamping',opt.isDamping...
-        ,'friction',opt.coeffFriction,'meanFlowVelocity',opt.meanFlowVelocity...
+        ,'friction',SreaightCoeffFriction,'meanFlowVelocity',SreaightMeanFlowVelocity...
         ,'m',para(i).opt.mach,'notMach',para(i).opt.notMach,...
         'isOpening',isOpening);
         plusStraight = calcPuls(temp,dcpss);
@@ -195,8 +203,8 @@ for i = 1:length(para)
         para(i).L1,para(i).L2,para(i).Dpipe...
         ,para(i).vhpicStruct,...
         para(i).sectionL1,para(i).sectionL2,...
-        'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',para(i).opt.coeffFriction,...
-        'meanFlowVelocity',para(i).opt.meanFlowVelocity,...
+        'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',PerfClosedCoeffFriction,...
+        'meanFlowVelocity',PerfClosedMeanFlowVelocity,...
         'm',para(i).opt.mach,'notMach',para(i).opt.notMach,...
         'isOpening',isOpening);%,'coeffDamping',para(i).opt.coeffDamping,
     plus1ClosedIB{i} = calcPuls(pressure1ClosedIB,dcpss);

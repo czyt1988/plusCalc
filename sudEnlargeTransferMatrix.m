@@ -38,7 +38,9 @@ if notMach
     mach = 0;
 end
 M=(1-Tin_out)*(2*coeffDamping*mach*a)/S_out;
-
+if isnan(M)
+    M = 0;
+end
 
 Matrix = [1,M;...
           0,1];

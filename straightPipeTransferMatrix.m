@@ -12,8 +12,11 @@ isDamping = 0;
 coeffDamping = nan;
 coeffFriction = nan;
 meanFlowVelocity = nan;
+dynViscosity = nan;
+density = nan;
 mach = nan;
 notMach = 0;%强制不使用mach
+calcWay2 = 0;%使用另外一种计算传递矩阵的方法，方法见Pulsation and Vibration Analysis of Compressor / Page.421,equ（10-34）
 while length(pp)>=2
     prop =pp{1};
     val=pp{2};
@@ -21,6 +24,7 @@ while length(pp)>=2
     switch lower(prop)
         case 's' %截面
             S = val;
+            Dpipe = (4*S/pi)^0.5;
         case 'd' %管道直径
             Dpipe = val;
             S = (pi.*Dpipe^2)./4;
@@ -56,6 +60,14 @@ while length(pp)>=2
             mach = val;
         case 'notmach'
             notMach = val;
+        case 'calcway2'
+            calcWay2 = val;
+        case 'dynvis'%动力学粘度pa-s
+            dynViscosity = val;
+        case 'dynviscosity'%动力学粘度pa-s
+            dynViscosity = val;
+        case 'density'%密度
+            density = val;
         otherwise
        		error('参数错误%s',prop);
     end
@@ -77,6 +89,7 @@ if isnan(k)
 	end
 	k = oumiga./a;
 end
+
 if isDamping
     if isnan(coeffDamping)
         if isnan(coeffFriction)
@@ -85,40 +98,66 @@ if isDamping
         if isnan(meanFlowVelocity)
             error('若需要计算阻尼，且没有定义阻尼系数，需要定义“meanFlowVelocity”平均流速');
         end
-
-        if isnan(Dpipe)
-            Dpipe = (4*S/pi)^0.5;
-        end
         coeffDamping = (4*coeffFriction*meanFlowVelocity/Dpipe)/(2*a);
     end
 end
-if ~notMach%允许使用马赫
+if ~notMach
     if isnan(mach)
-        if ~isnan(a) && ~isnan(meanFlowVelocity)
-            mach = meanFlowVelocity./a;
+        if isnan(meanFlowVelocity)
+            mach = 0;
+        else
+            mach = meanFlowVelocity / a;
         end
     end
-else
-    mach = nan;
 end
 %% 计算
 if isDamping
-    if isnan(mach)
-        M = [cosh(coeffDamping.*L).*cos(k.*L)+1i*sinh(coeffDamping.*L).*sin(k*L)...
-            ,-(a./S)*(sinh(coeffDamping.*L).*cos(k.*L) + 1i.*cosh(coeffDamping.*L).*sin(k.*L))...%1i为复数虚部
-            ;...x
-            -(S./a).*( sinh(coeffDamping.*L).*cos(k.*L) + 1i.*cosh(coeffDamping.*L).*sin(k.*L) )...
-            ,cosh(coeffDamping.*L).*cos(k.*L)+1i.*sinh(coeffDamping.*L).*sin(k.*L)];
+    if calcWay2
+        %老外公式
+        if isnan(dynViscosity)
+            error('使用calcWay2属性需要定义动力学粘度属性dynvis');
+        end
+        if isnan(density)
+            error('使用calcWay2属性需要定义密度属性density');
+        end
+        if isnan(mach)
+            if isnan(meanFlowVelocity)
+                mach = 0;
+            else
+                mach = meanFlowVelocity / a;
+            end
+        end
+        Acoeff = (2/(a*Dpipe)) * (pi * dynViscosity * f / density)^0.5;
+        Kcoeff = (Acoeff + 1i*k) / (1-mach^2);
+        Ecoeff = exp(-Kcoeff * L * mach);
+        MA = cosh(Kcoeff * L)*Ecoeff;
+        MB = (density * a / S)*sinh(Kcoeff * L)*Ecoeff;
+        MC = (S/(density * a))*sinh(Kcoeff * L)*Ecoeff;
+        MD = MA;
+        M = [MD/(MD*MA-MB*MC),-MB/((density*S)*(MD*MA-MB*MC));...
+            (density*S)*MC/(MB*MC-MA*MD),-MA/(MB*MC-MA*MD)];
     else
-        mm = 1-mach.^2;
-        M = [cosh(coeffDamping.*L./mm).*cos(k.*L./mm)+1i*sinh(coeffDamping.*L./mm).*sin(k*L./mm)...
-            ,-(a./S)*(sinh(coeffDamping.*L./mm).*cos(k.*L./mm) + 1i.*cosh(coeffDamping.*L./mm).*sin(k.*L./mm))...%1i为复数虚部
-            ;...x
-            -(S./a).*( sinh(coeffDamping.*L./mm).*cos(k.*L./mm) + 1i.*cosh(coeffDamping.*L./mm).*sin(k.*L./mm) )...
-            ,cosh(coeffDamping.*L./mm).*cos(k.*L./mm)+1i.*sinh(coeffDamping.*L./mm).*sin(k.*L./mm)];
+        %西交大公式
+        if notMach
+            M = [cosh(coeffDamping.*L).*cos(k.*L)+1i*sinh(coeffDamping.*L).*sin(k*L)...
+                ,-(a./S)*(sinh(coeffDamping.*L).*cos(k.*L) + 1i.*cosh(coeffDamping.*L).*sin(k.*L))...%1i为复数虚部
+                ;...x
+                -(S./a).*( sinh(coeffDamping.*L).*cos(k.*L) + 1i.*cosh(coeffDamping.*L).*sin(k.*L) )...
+                ,cosh(coeffDamping.*L).*cos(k.*L)+1i.*sinh(coeffDamping.*L).*sin(k.*L)];
+        else
+            if isnan(mach)
+                error('请定义马赫数');
+            end
+            mm = 1-mach.^2;
+            M = [cosh(coeffDamping.*L./mm).*cos(k.*L./mm)+1i*sinh(coeffDamping.*L./mm).*sin(k*L./mm)...
+                ,-(a./S)*(sinh(coeffDamping.*L./mm).*cos(k.*L./mm) + 1i.*cosh(coeffDamping.*L./mm).*sin(k.*L./mm))...%1i为复数虚部
+                ;...x
+                -(S./a).*( sinh(coeffDamping.*L./mm).*cos(k.*L./mm) + 1i.*cosh(coeffDamping.*L./mm).*sin(k.*L./mm) )...
+                ,cosh(coeffDamping.*L./mm).*cos(k.*L./mm)+1i.*sinh(coeffDamping.*L./mm).*sin(k.*L./mm)];
+        end
     end
 else
-    if isnan(mach)
+    if notMach
         M = [cos(k.*L),-1i.*(a./S).*sin(k.*L);...
             -1i.*(S./a).*sin(k.*L),cos(k.*L)];
     else

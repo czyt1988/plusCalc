@@ -1,4 +1,4 @@
-%% 缓冲罐内置孔管结构与单一顺接缓冲罐对比
+%% 扫频
 clc;
 close all;
 clear;
@@ -34,16 +34,16 @@ currentPath = fileparts(mfilename('fullpath'));
 % xSection1，xSection2 孔管每圈孔的间距，从0开始算，x的长度为孔管孔的圈数+1，x的值是当前一圈孔和上一圈孔的距离，如果间距一样，那么x里的值都一样
 isOpening = 0;%管道闭口
 %rpm = 300;outDensity = 1.9167;multFre=[10,20,30];%环境25度绝热压缩到0.2MPaG的温度对应密度
-rpm = 420;outDensity = 1.5608;multFre=[14,28,42];%环境25度绝热压缩到0.15MPaG的温度对应密度
+rpm = 420;outDensity = 1.5608;%multFre=[14,28,42];%环境25度绝热压缩到0.15MPaG的温度对应密度
 Fs = 4096;
 [massFlowRaw,time,~,opt.meanFlowVelocity] = massFlowMaker(0.25,0.098,rpm...
 	,0.14,1.075,outDensity,'rcv',0.15,'k',1.4,'pr',0.15,'fs',Fs,'oneSecond',6);
 
 %massFlow = load(fullfile(currentPath,'mass_flow_0.1478_NorthZone.txt'));
 
-[FreRaw,AmpRaw,PhRaw,massFlowERaw] = frequencySpectrum(detrend(massFlowRaw,'constant'),Fs);
-FreRaw = [7,14,21,28,14*3];
-massFlowERaw = [0.02,0.2,0.03,0.003,0.007];
+%[FreRaw,AmpRaw,PhRaw,massFlowERaw] = frequencySpectrum(detrend(massFlowRaw,'constant'),Fs);
+FreRaw = 1:1:300;
+massFlowERaw = ones(1,size(FreRaw,2));
 
 % 提取主要频率
 massFlowE = massFlowERaw;
@@ -71,7 +71,7 @@ opt.coeffDamping = nan;%阻尼
 opt.coeffFriction = 0.04;%管道摩察系数
 SreaightMeanFlowVelocity =20;%14.5;%管道平均流速
 SreaightCoeffFriction = 0.03;
-VesselMeanFlowVelocity = 8;%14.5;%缓冲罐平均流速
+VesselMeanFlowVelocity =8;%14.5;%缓冲罐平均流速
 VesselCoeffFriction = 0.003;
 PerfClosedMeanFlowVelocity =9;%14.5;%堵死孔管平均流速
 PerfClosedCoeffFriction = 0.04;
@@ -157,9 +157,9 @@ dcpss.rs = 30;%截止区衰减DB数设置
 dataCount = 2;
 calcDatas{1,2} = 'x值';
 calcDatas{1,3} = '压力脉动';
-calcDatas{1,4} = '1倍频';
-calcDatas{1,5} = '2倍频';
-calcDatas{1,6} = '3倍频';
+calcDatas{1,4} = '罐前压力';
+calcDatas{1,5} = '罐后压力';
+
 for i = 1:length(para)
     
     if i==1
@@ -179,7 +179,7 @@ for i = 1:length(para)
         plusStraight = calcPuls(temp,dcpss);
         maxPlus1Straight(i) = max(plusStraight(1:sepratorIndex(i)));
         maxPlus2Straight(i) = max(plusStraight(sepratorIndex(i):end));
-        multFreAmpValue_straightPipe{i} = calcWaveFreAmplitude(temp,Fs,multFre,'freErr',1);
+%         multFreAmpValue_straightPipe{i} = calcWaveFreAmplitude(temp,Fs,multFre,'freErr',1);
 
         if isXShowRealLength
             X = straightPipeSection;
@@ -189,9 +189,10 @@ for i = 1:length(para)
         calcDatas{dataCount,1} = sprintf('直管');
         calcDatas{dataCount,2} = X;
         calcDatas{dataCount,3} = plusStraight;
-        calcDatas{dataCount,4} = multFreAmpValue_straightPipe{i}(1,:);
-        calcDatas{dataCount,5} = multFreAmpValue_straightPipe{i}(2,:);
-        calcDatas{dataCount,6} = multFreAmpValue_straightPipe{i}(3,:);
+        calcDatas{dataCount,4} = temp(:,sepratorIndex);
+        calcDatas{dataCount,5} = temp(:,sepratorIndex+1);
+%         calcDatas{dataCount,5} = multFreAmpValue_straightPipe{i}(2,:);
+%         calcDatas{dataCount,6} = multFreAmpValue_straightPipe{i}(3,:);
         dataCount = dataCount + 1;
     end
 
@@ -211,14 +212,16 @@ for i = 1:length(para)
     plus1ClosedIB{i} = calcPuls(pressure1ClosedIB,dcpss);
     plus2ClosedIB{i} = calcPuls(pressure2ClosedIB,dcpss);
     plusClosedIB{i} = [plus1ClosedIB{i},plus2ClosedIB{i}];
-    multFreAmpValueClosedIB{i} = calcWaveFreAmplitude([pressure1ClosedIB,pressure2ClosedIB],Fs,multFre,'freErr',1);
+%     multFreAmpValueClosedIB{i} = calcWaveFreAmplitude([pressure1ClosedIB,pressure2ClosedIB],Fs,multFre,'freErr',1);
     
     calcDatas{dataCount,1} = sprintf('入口偏置内插孔管两端堵死缓冲罐,n1:%g,n2:%g',variant_n1(i),variant_n2(i));
     calcDatas{dataCount,2} = X;
     calcDatas{dataCount,3} = plusClosedIB{i};
-    calcDatas{dataCount,4} = multFreAmpValueClosedIB{i}(1,:);
-    calcDatas{dataCount,5} = multFreAmpValueClosedIB{i}(2,:);
-    calcDatas{dataCount,6} = multFreAmpValueClosedIB{i}(3,:);
+    calcDatas{dataCount,4} = pressure1ClosedIB(:,end);
+    calcDatas{dataCount,5} = pressure2ClosedIB(:,1);
+%     calcDatas{dataCount,4} = multFreAmpValueClosedIB{i}(1,:);
+%     calcDatas{dataCount,5} = multFreAmpValueClosedIB{i}(2,:);
+%     calcDatas{dataCount,6} = multFreAmpValueClosedIB{i}(3,:);
     dataCount = dataCount + 1;
 
     [pressure1OpenIB,pressure2OpenIB] = ...
@@ -233,13 +236,15 @@ for i = 1:length(para)
     plus1OpenIB{i} = calcPuls(pressure1OpenIB,dcpss);
     plus2OpenIB{i} = calcPuls(pressure2OpenIB,dcpss);
     plusOpenIB{i} = [plus1OpenIB{i},plus2OpenIB{i}];
-    multFreAmpValueOpendIB{i} = calcWaveFreAmplitude([pressure1OpenIB,pressure2OpenIB],Fs,multFre,'freErr',1);
+%     multFreAmpValueOpendIB{i} = calcWaveFreAmplitude([pressure1OpenIB,pressure2OpenIB],Fs,multFre,'freErr',1);
     calcDatas{dataCount,1} = sprintf('入口偏置内插孔管开口缓冲罐,n1:%g,n2:%g',variant_n1(i),variant_n2(i));
     calcDatas{dataCount,2} = X;
     calcDatas{dataCount,3} = plusOpenIB{i};
-    calcDatas{dataCount,4} = multFreAmpValueOpendIB{i}(1,:);
-    calcDatas{dataCount,5} = multFreAmpValueOpendIB{i}(2,:);
-    calcDatas{dataCount,6} = multFreAmpValueOpendIB{i}(3,:);
+    calcDatas{dataCount,4} = pressure1OpenIB(:,end);
+    calcDatas{dataCount,5} = pressure2OpenIB(:,1);
+%     calcDatas{dataCount,4} = multFreAmpValueOpendIB{i}(1,:);
+%     calcDatas{dataCount,5} = multFreAmpValueOpendIB{i}(2,:);
+%     calcDatas{dataCount,6} = multFreAmpValueOpendIB{i}(3,:);
     dataCount = dataCount + 1;
 
     %计算单一缓冲罐入口偏置
@@ -255,56 +260,19 @@ for i = 1:length(para)
             'm',para(i).opt.mach,'notMach',para(i).opt.notMach,...
             'isOpening',isOpening);
         plusOVIB = [calcPuls(pressure1Temp,dcpss),calcPuls(pressure2Temp,dcpss)];
-        multFreAmpValue_OVIB{i} = calcWaveFreAmplitude([pressure1Temp,pressure2Temp],Fs,multFre,'freErr',1);
+%         multFreAmpValue_OVIB{i} = calcWaveFreAmplitude([pressure1Temp,pressure2Temp],Fs,multFre,'freErr',1);
 
         calcDatas{dataCount,1} = sprintf('无内件缓冲罐-进口错位出口顺接');
 	    calcDatas{dataCount,2} = X;
 	    calcDatas{dataCount,3} = plusOVIB;
-	    calcDatas{dataCount,4} = multFreAmpValue_OVIB{i}(1,:);
-	    calcDatas{dataCount,5} = multFreAmpValue_OVIB{i}(2,:);
-	    calcDatas{dataCount,6} = multFreAmpValue_OVIB{i}(3,:);
+        calcDatas{dataCount,4} = pressure1Temp(:,end);
+        calcDatas{dataCount,5} = pressure2Temp(:,1);
+% 	    calcDatas{dataCount,4} = multFreAmpValue_OVIB{i}(1,:);
+% 	    calcDatas{dataCount,5} = multFreAmpValue_OVIB{i}(2,:);
+% 	    calcDatas{dataCount,6} = multFreAmpValue_OVIB{i}(3,:);
     	dataCount = dataCount + 1;
         
-%         [pressure1Temp,pressure2Temp] = vesselBiasPulsationCalc(massFlowE4Vessel,Fre4Vessel,time,...
-%         para(i).L1,para(i).L2,...
-%         para(i).vhpicStruct.Lv,para(i).vhpicStruct.l,para(i).Dpipe,para(i).vhpicStruct.Dv...
-%         ,para(i).vhpicStruct.lv1,...
-%         para(i).vhpicStruct.lv2,0,...
-%         para(i).sectionL1,para(i).sectionL2,...
-%         'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',para(i).opt.coeffFriction,...
-%         'meanFlowVelocity',para(i).opt.meanFlowVelocity,'isUseStaightPipe',1,...
-%         'm',para(i).opt.mach,'notMach',para(i).opt.notMach...
-%         ,'isOpening',isOpening...
-%         );%,'coeffDamping',opt.coeffDamping
-%         plusOVIB = [calcPuls(pressure1Temp,dcpss),calcPuls(pressure2Temp,dcpss)];
-%         multFreAmpValue_OVIB{i} = calcWaveFreAmplitude([pressure1Temp,pressure2Temp],Fs,multFre,'freErr',1);
-%         calcDatas{dataCount,1} = sprintf('无内件缓冲罐-进出口错位');
-% 	    calcDatas{dataCount,2} = X;
-% 	    calcDatas{dataCount,3} = plusOVIB;
-% 	    calcDatas{dataCount,4} = multFreAmpValue_OVIB{i}(1,:);
-% 	    calcDatas{dataCount,5} = multFreAmpValue_OVIB{i}(2,:);
-% 	    calcDatas{dataCount,6} = multFreAmpValue_OVIB{i}(3,:);
-%     	dataCount = dataCount + 1;
-%         
-%         [pressure1Temp,pressure2Temp] = vesselStraightBiasPulsationCalc(massFlowE,Fre,time...
-%         ,para(i).L1,para(i).L2...
-%         ,para(i).vhpicStruct.Lv,para(i).vhpicStruct.l,para(i).Dpipe,para(i).vhpicStruct.Dv...
-%         ,para(i).vhpicStruct.lv2,0 ...
-%         ,para(i).sectionL1,para(i).sectionL2,...
-%         'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',para(i).opt.coeffFriction,...
-%         'meanFlowVelocity',para(i).opt.meanFlowVelocity,'isUseStaightPipe',1,...
-%         'm',para(i).opt.mach,'notMach',para(i).opt.notMach...
-%         ,'isOpening',isOpening...
-%         );%,'coeffDamping',opt.coeffDamping
-%         plusOVIB = [calcPuls(pressure1Temp,dcpss),calcPuls(pressure2Temp,dcpss)];
-%         multFreAmpValue_OVIB{i} = calcWaveFreAmplitude([pressure1Temp,pressure2Temp],Fs,multFre,'freErr',1);
-%         calcDatas{dataCount,1} = sprintf('无内件缓冲罐-进口顺接出口错位');
-% 	    calcDatas{dataCount,2} = X;
-% 	    calcDatas{dataCount,3} = plusOVIB;
-% 	    calcDatas{dataCount,4} = multFreAmpValue_OVIB{i}(1,:);
-% 	    calcDatas{dataCount,5} = multFreAmpValue_OVIB{i}(2,:);
-% 	    calcDatas{dataCount,6} = multFreAmpValue_OVIB{i}(3,:);
-%     	dataCount = dataCount + 1;
+
     end
     
     %计算脉动抑制率
@@ -313,15 +281,8 @@ for i = 1:length(para)
 
     temp(temp<1e-4) = 1;
     temp2(temp<1e-4) = 1;%temp小于1e-4时，temp2也设置为1.
-    reduceRateOpen{i} = (temp - temp2)./temp;
+    reduceRate{i} = (temp - temp2)./temp;
 
-    temp = plusOVIB;
-    temp2 = plusClosedIB{i};
-
-    temp(temp<1e-4) = 1;
-    temp2(temp<1e-4) = 1;%temp小于1e-4时，temp2也设置为1.
-    reduceRateClosed{i} = (temp - temp2)./temp;
-    
     if isempty(plus1ClosedIB{i})
         maxPlus1(i) = nan;
     else
@@ -337,23 +298,24 @@ for i = 1:length(para)
 end
 ignoreHeader = 1;
 %绘制压力脉动
+
 figure 
 plotDataCells(calcDatas,'xcol',2,'ycol',3,'legendcol',1,'ignoreHeader',ignoreHeader);
 title('脉动压力峰峰值');
 %绘制1倍频
-figure
-plotDataCells(calcDatas,'xcol',2,'ycol',4,'legendcol',1,'ignoreHeader',ignoreHeader);
-title('压力1倍频');
-%绘制2倍频
-figure
-plotDataCells(calcDatas,'xcol',2,'ycol',5,'legendcol',1,'ignoreHeader',ignoreHeader);
-title('压力2倍频');
-%绘制3倍频
-figure
-plotDataCells(calcDatas,'xcol',2,'ycol',6,'legendcol',1,'ignoreHeader',ignoreHeader);
-title('压力3倍频');
+% figure
+% plotDataCells(calcDatas,'xcol',2,'ycol',4,'legendcol',1,'ignoreHeader',ignoreHeader);
+% title('压力1倍频');
+% %绘制2倍频
+% figure
+% plotDataCells(calcDatas,'xcol',2,'ycol',5,'legendcol',1,'ignoreHeader',ignoreHeader);
+% title('压力2倍频');
+% %绘制3倍频
+% figure
+% plotDataCells(calcDatas,'xcol',2,'ycol',6,'legendcol',1,'ignoreHeader',ignoreHeader);
+% title('压力3倍频');
 
-result = externPlotDatasCell(calcDatas,'dataRowsIndexs',[2:size(calcDatas,1)]...
-    ,'dataColumnIndex',[2:size(calcDatas,2)]...
-    ,'dataParamLegend',calcDatas(1,2:size(calcDatas,2))...
-    ,'dataNameLegend',calcDatas(2:size(calcDatas,1)),1);
+% result = externPlotDatasCell(calcDatas,'dataRowsIndexs',[2:size(calcDatas,1)]...
+%     ,'dataColumnIndex',[2:size(calcDatas,2)]...
+%     ,'dataParamLegend',calcDatas(1,2:size(calcDatas,2))...
+%     ,'dataNameLegend',calcDatas(2:size(calcDatas,1)),1);

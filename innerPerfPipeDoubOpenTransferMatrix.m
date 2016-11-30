@@ -1,4 +1,4 @@
-function M = innerPerfPipeDoubOpenTransferMatrix(n2,dp,Din,Dv,lp2,lc,lb1,lb2,varargin)
+function M = innerPerfPipeDoubOpenTransferMatrix(n2,dp2,Din,Dv,lp2,lc,lb1,lb2,varargin)
 %对应孔管内部部分
 %内插孔管，孔管开孔数不是非常少，无法等价为亥姆霍兹共鸣器，且孔管出口开口，缓冲罐全开,理论来自文献《A study on the transmission loss of straight鈥恡hrough type reactive mufflers》
 % n2 孔管穿孔数
@@ -83,7 +83,7 @@ end
 % coeffR = calcR(coeffD);
 % coeffT = calcT(k,lb1,lb2,coeffR);
 
-[Ta1,Tb1,Tc1,Td1] = calcT1(n2,dp,Din,Dv,lb1,lb2,lp2,k,M1,M2,R0,lc);
+[Ta1,Tb1,Tc1,Td1] = calcT1(n2,dp2,Din,Dv,lb1,lb2,lp2,k,M1,M2,R0,lc);
 coeffFM = Td1*Ta1-Tb1*Tc1;
 
 
@@ -95,7 +95,7 @@ D = -Ta1./(-coeffFM);
 M = [A,B;C,D];%[p2,m2]孔管出口端（开孔部分）所在缓冲罐内的压力=M*[p1,m1]
 end
  
-function [Ta1,Tb1,Tc1,Td1] = calcT1(n2,dp,Din,Dv,lb1,lb2,lp2,k,M1,M2,R0,lc)
+function [Ta1,Tb1,Tc1,Td1] = calcT1(n2,dp2,Din,Dv,lb1,lb2,lp2,k,M1,M2,R0,lc)
 % n2 孔管穿孔数
 % dp 孔管穿孔孔径
 % Din 穿管管径
@@ -104,7 +104,7 @@ function [Ta1,Tb1,Tc1,Td1] = calcT1(n2,dp,Din,Dv,lb1,lb2,lp2,k,M1,M2,R0,lc)
 % M1 管内的马赫数
 % R0 系数默认0.0055
 % lc 孔管壁厚
-    [a1,a2,a3,a4,a5,a6,a7,a8] = calcCoeffA(n2,dp,Din,Dv,lp2,k,M1,M2,R0,lc);
+    [a1,a2,a3,a4,a5,a6,a7,a8] = calcCoeffA(n2,dp2,Din,Dv,lp2,k,M1,M2,R0,lc);
     [r1,r2,r3,r4] = calcCoeffR(a1,a2,a3,a4,a5,a6,a7,a8);
     beita = calcCoeffBeita(r1,r2,r3,r4);
     Fai = calcCoeffFai(beita,a1,a2,a3,a4);
@@ -140,7 +140,7 @@ end
 
 
 
-function [a1,a2,a3,a4,a5,a6,a7,a8] = calcCoeffA(n2,dp,Din,Dv,lp2,k,M1,M2,R0,lc)
+function [a1,a2,a3,a4,a5,a6,a7,a8] = calcCoeffA(n2,dp2,Din,Dv,lp2,k,M1,M2,R0,lc)
 % n2 孔管穿孔数
 % dp 孔管穿孔孔径
 % Din 穿管管径
@@ -150,19 +150,19 @@ function [a1,a2,a3,a4,a5,a6,a7,a8] = calcCoeffA(n2,dp,Din,Dv,lp2,k,M1,M2,R0,lc)
 % R0 系数默认0.0055
 % lc 孔管壁厚
 
-    bp2 = n2.*dp^2./(4.*Din.*lp2);%开孔率
-    rp = dp/2;
+    bp2 = n2.*dp2^2./(4.*Din.*lp2);%开孔率
+    rp = dp2/2;
     kr = k.*rp;
 %     if kr <= M1 %M1为管内马赫数    
 %         Cg = 12^(k.*rp./(M1-1));
 %     else
 %         Cg = 1;
 %     end  
-    sig0 = calcSigma0(dp);
+    sig0 = calcSigma0(dp2);
     if M1 == 0
-         kp = (R0+1i.*k.*(lc+sig0.*dp))./bp2;%kp为穿孔声阻抗率
+         kp = (R0+1i.*k.*(lc+sig0.*dp2))./bp2;%kp为穿孔声阻抗率
     elseif M1>0
-        kp = (R0 + 2.48.*(1-bp2).*(M1.^(1.04+40.*dp)) + 1i.*k.*(lc+(1-(1+398.34.*dp).*((1-bp2).^1.44).*(M1.^0.72)).*sig0.*dp))./bp2;%通过流
+        kp = (R0 + 2.48.*(1-bp2).*(M1.^(1.04+40.*dp2)) + 1i.*k.*(lc+(1-(1+398.34.*dp2).*((1-bp2).^1.44).*(M1.^0.72)).*sig0.*dp2))./bp2;%通过流
         %kp = (R0+0.48.*abs(k.*rp-M1)+1i.*k.*(lc+Cg.*sig0.*dp))./bp2;%掠过流
     else
         error('马赫数M1不能小于0');

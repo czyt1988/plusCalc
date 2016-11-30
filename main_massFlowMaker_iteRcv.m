@@ -4,8 +4,8 @@ clear;
 currentPath = fileparts(mfilename('fullpath'));
 %% 余隙容积对质量流量的影响
 
-rcv = [0.05,0.2,0.35];% 相对余隙容积
-pressureRadio=2;%压力比（排气压力/吸气压力）
+rcv = [0.05:0.01:0.35];% 相对余隙容积
+pressureRadio=2;%压力比（排气压力/吸气压力）1.5-3.5
 k=1.4;%绝热指数
 DCylinder=250/1000;%缸径m
 dPipe=98/1000;%管内径m

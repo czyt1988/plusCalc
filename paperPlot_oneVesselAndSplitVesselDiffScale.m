@@ -35,8 +35,8 @@ dcpss.f_stop = 5;%截止频率3Hz
 dcpss.rp = 0.1;%边带区衰减DB数设置
 dcpss.rs = 30;%截止区衰减DB数设置
 %%参数设定
-Lv1 = 0.3:0.1:2;
-Lv2 = 0.3:0.1:2;
+Lv1 = 0.05:0.01:0.4;
+Lv2 = 0.05:0.01:0.4;
 for i=1:length(Lv1)
     for j=1:length(Lv2)
         paraDV(i,j).opt = opt;
@@ -93,7 +93,7 @@ for i=1:length(Lv1)
     end
 end
 
-if 0
+if 1
     figure
     [X,Y] = meshgrid(VDV1(:,1),VDV2(1,:));
     Z1 = (-(afterMaxPlusDV'-afterMaxPlusOV')./afterMaxPlusOV')*100;

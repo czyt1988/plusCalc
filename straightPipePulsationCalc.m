@@ -25,9 +25,14 @@ if nargin == 1
     time = inputData.time;
     L = inputData.L;
     sectionL = inputData.sectionL;
-
+    calcWay2 = inputData.calcWay2;
+    dynViscosity = inputData.dynViscosity;
+    density = inputData.density;
 else
     pp=varargin;
+    dynViscosity = nan;
+    density = nan;
+    calcWay2 = 0;
     k = nan;
     oumiga = nan;
     f = nan;
@@ -74,6 +79,14 @@ else
                 notMach = val;
             case 'isopening'%管道末端是否为无反射端(开口)，如果为0，就是为闭口，无流量端
                 isOpening = val;
+            case 'calcway2'
+                calcWay2 = val;
+            case 'dynvis'%动力学粘度pa-s
+                dynViscosity = val;
+            case 'dynviscosity'%动力学粘度pa-s
+                dynViscosity = val;
+            case 'density'%密度
+                density = val;    
             otherwise
                 error('参数错误%s',prop);
         end
@@ -89,7 +102,8 @@ for i = 1:length(Frequency)
     f = Frequency(i);
     matrix_total = straightPipeTransferMatrix(L,'s',S,'f',f,'a',a,'D',Dpipe...
         ,'isDamping',isDamping,'coeffFriction',coeffFriction,'meanFlowVelocity',meanFlowVelocity...
-        ,'m',mach,'notmach',notMach);
+        ,'m',mach,'notmach',notMach...
+        ,'calcWay2',calcWay2,'density',density,'dynViscosity',dynViscosity);
     A = matrix_total(1,1);
     B = matrix_total(1,2);
     C = matrix_total(2,1);
@@ -111,7 +125,8 @@ for len = sectionL
         f = Frequency(i);
         matrixTOther = straightPipeTransferMatrix(len,'s',S,'f',f,'a',a,'D',Dpipe...
         ,'isDamping',isDamping,'coeffFriction',coeffFriction,'meanFlowVelocity',meanFlowVelocity...
-        ,'m',mach,'notmach',notMach);
+        ,'m',mach,'notmach',notMach...
+        ,'calcWay2',calcWay2,'density',density,'dynViscosity',dynViscosity);
         pressureEi(count2) = matrixTOther(1,1)*pressureE1(count2) + matrixTOther(1,2)*massFlowE(count2);
         count2 = count2 + 1;
     end

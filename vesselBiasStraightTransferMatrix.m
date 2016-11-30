@@ -150,8 +150,13 @@ M1 = straightPipeTransferMatrix(l,'k',k,'S',S,'a',a,...
      ,'mach',optMachStraight.mach,'notmach',optMachStraight.notMach);
 %缓冲罐传递矩阵
 %阻尼参数设置
-optDamp.isDamping = 0;
-optDamp.coeffDamping = coeffDamping(2);
+
+optDamp.isDamping = isDamping;
+if isDamping
+    optDamp.coeffDamping = coeffDamping(2);
+else
+    optDamp.coeffDamping = nan;
+end
 optDamp.meanFlowVelocity = meanFlowVelocity(2);
 Mv = vesselMatrix_StrBias(isUseStaightPipe,Lv,lv1,k,Dvessel,Dpipe,Dbias,a,optDamp,optMachVessel);
 %后管道传递矩阵
@@ -180,16 +185,19 @@ function Mv = vesselMatrix_StrBias(isUseStaightPipe,Lv,lv1,k,Dv,Dpipe,Dbias,a,op
         ML = straightPipeTransferMatrix(Lv-lv1,'k',k,'D',Dv,'a',a,...
                 'isDamping',optDamping.isDamping,'coeffDamping',optDamping.coeffDamping...
                 ,'mach',optMach.mach,'notmach',optMach.notMach);%直管传递矩阵
-        A = 0;
-        B = 0;
-        %考虑马赫数和不考虑马赫数对变径的传递矩阵有影响
-        if optMach.notMach%不考虑马赫数
-            Sv = pi.*Dv.^2./4;
-            A = optDamping.coeffDamping*optDamping.meanFlowVelocity/Sv;%不考虑马赫数变径传递矩阵的右上角项
-            B = A;%不考虑马赫数变径传递矩阵是相等的
-            Mv = [1,B;0,1]*ML*[1,A;0,1];%直管加两个变径
-            return;
-        end
+%         A = 0;
+%         B = 0;
+%         %考虑马赫数和不考虑马赫数对变径的传递矩阵有影响
+%         if optMach.notMach%不考虑马赫数
+%             Sv = pi.*Dv.^2./4;
+%             A = optDamping.coeffDamping*optDamping.meanFlowVelocity/Sv;%不考虑马赫数变径传递矩阵的右上角项
+%             if isnan(A)
+%                 A = 0;
+%             end
+%             B = A;%不考虑马赫数变径传递矩阵是相等的
+%             Mv = [1,B;0,1]*ML*[1,A;0,1];%直管加两个变径
+%             return;
+%         end
         %左边偏置部分
         innerLM = innerPipeCavityTransferMatrix(Dv,Dbias,lv1,'a',a,'k',k);
         %由渐缩管道引起的入口处急速变径的传递矩阵

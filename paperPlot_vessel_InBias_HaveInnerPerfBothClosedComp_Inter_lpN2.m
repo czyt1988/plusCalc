@@ -1,4 +1,4 @@
-%% 迭代穿孔长度，也就是迭代开孔率
+%% 迭代孔管开孔长度，定开孔率，定Din，定dp.变Lin，Lout
 clc;
 close all;
 clear;
@@ -41,23 +41,20 @@ Fs = 4096;
 %massFlow = load(fullfile(currentPath,'mass_flow_0.1478_NorthZone.txt'));
 
 [FreRaw,AmpRaw,PhRaw,massFlowERaw] = frequencySpectrum(detrend(massFlowRaw,'constant'),Fs);
-FreRaw = [7,14,21,28,14*3];
-% massFlowERaw = [0.02,0.2,0.02,0.04,0.025];
-massFlowERaw = [0.02,0.2,0.03,0.003,0.007];
 
 % 提取主要频率
-massFlowE = massFlowERaw;
-Fre = FreRaw;
+% massFlowE = massFlowERaw;
+% Fre = FreRaw;
 
-% [pks,locs] = findpeaks(AmpRaw,'SORTSTR','descend');
-% Fre = FreRaw(locs);
-% massFlowE = massFlowERaw(locs);
-% temp = [1:20];%(Fre<29) ;%| (Fre>30 & Fre < 100);
-% 
-% massFlowE4Vessel = massFlowE;
-% massFlowE = massFlowE(temp);
-% Fre4Vessel = Fre;
-% Fre = Fre(temp);
+[pks,locs] = findpeaks(AmpRaw,'SORTSTR','descend');
+Fre = FreRaw(locs);
+massFlowE = massFlowERaw(locs);
+temp = [1:20];%(Fre<29) ;%| (Fre>30 & Fre < 100);
+
+massFlowE4Vessel = massFlowE;
+massFlowE = massFlowE(temp);
+Fre4Vessel = Fre;
+Fre = Fre(temp);
 
 isDamping = 1;
 %绘图参数
@@ -69,35 +66,29 @@ opt.acousticVelocity = 345;%声速
 opt.isDamping = isDamping;%是否计算阻尼
 opt.coeffDamping = nan;%阻尼
 opt.coeffFriction = 0.04;%管道摩察系数
-SreaightMeanFlowVelocity =20;%14.5;%管道平均流速
-SreaightCoeffFriction = 0.03;
-VesselMeanFlowVelocity =8;%14.5;%缓冲罐平均流速
-VesselCoeffFriction = 0.003;
-PerfClosedMeanFlowVelocity =9;%14.5;%堵死孔管平均流速
-PerfClosedCoeffFriction = 0.04;
-PerfOpenMeanFlowVelocity =15;%14.5;%开口孔管平均流速
-PerfOpenCoeffFriction = 0.035;
+VesselMeanFlowVelocity =10;%14.5;%管道平均流速
+VesselCoeffFriction = 0.04;
 % opt.meanFlowVelocity =14.5;%14.5;%管道平均流速
 opt.isUseStaightPipe = 1;%计算容器传递矩阵的方法
 opt.mach = opt.meanFlowVelocity / opt.acousticVelocity;
 opt.notMach = 1;
 
-variant_n1 = [24];%按实验一圈8个孔
+% variant_n1 = [24];%按实验一圈8个孔
 sectionNum1 =[1];%对应孔1的组数
 sectionNum2 =[1];%对应孔2的组数
-variant_n2 = [24];
+% variant_n2 = [24];
 variant_dp1 = [0.013];
 variant_dp2 = [0.013];
 variant_Din = [0.098/2];
-variant_lp1 = [0.08;0.16;0.24;0.32;0.40;0.48];
-variant_lp2 = [0.08;0.16;0.24;0.32;0.40;0.48];
+variant_lp1 = [0.1:0.1:0.5];
+variant_lp2 = [0.1:0.1:0.5];
 % variant_Lv1 = 0.568:0.02:0.84;
 calcDatas = {};
 
 
 for i = 1:length(variant_lp1)     
     para(i).opt = opt;
-    para(i).L1 = 3.5;%L1(m)
+    para(i).L1 = 1.5;%L1(m)
     para(i).L2 = 6;%L2（m）长度
     para(i).Dpipe = 0.098;%管道直径（m）
     para(i).vhpicStruct.l = 0.01;
@@ -111,22 +102,25 @@ for i = 1:length(variant_lp1)
 %     para(i).vhpicStruct.Lin = 0.25;%内插管入口段长度
     para(i).vhpicStruct.lp1 = variant_lp1(i);%内插管入口段非孔管开孔长度
     para(i).vhpicStruct.lp2 = variant_lp2(i);%内插管出口段孔管开孔长度
-    para(i).vhpicStruct.n1 = variant_n1;%入口段孔数
-    para(i).vhpicStruct.n2 = variant_n2;%出口段孔数
-    para(i).vhpicStruct.la1 = 0.03;%孔管入口段靠近入口长度
-    para(i).vhpicStruct.lb2 = 0.06;
-    para(i).vhpicStruct.la2 = 0.06;
-    para(i).vhpicStruct.lb1 = 0.03;
+%     para(i).vhpicStruct.n1 = variant_n1;%入口段孔数
+%     para(i).vhpicStruct.n2 = variant_n2;%出口段孔数
+    para(i).vhpicStruct.la1 = 0.01;%孔管入口段靠近入口长度
+    para(i).vhpicStruct.lb2 = 0.01;
+    para(i).vhpicStruct.la2 = 0.01;
+    para(i).vhpicStruct.lb1 = 0.01;
     para(i).vhpicStruct.Din = variant_Din;
-%     para(i).vhpicStruct.Lout = 0.25;
     para(i).vhpicStruct.Lin = para(i).vhpicStruct.la1+para(i).vhpicStruct.lp1+para(i).vhpicStruct.la2;
     para(i).vhpicStruct.Lout = para(i).vhpicStruct.lb1+para(i).vhpicStruct.lp2+para(i).vhpicStruct.lb2;
-    para(i).vhpicStruct.bp1 = variant_n1.*(variant_dp1)^2./(4.*variant_Din.*variant_lp1(i));%开孔率
-    para(i).vhpicStruct.bp2 = variant_n2.*(variant_dp2)^2./(4.*variant_Din.*variant_lp2(i));%开孔率
+%     para(i).vhpicStruct.bp1 = variant_n1.*(variant_dp1)^2./(4.*variant_Din.*variant_lp1(i));%开孔率
+%     para(i).vhpicStruct.bp2 = variant_n2.*(variant_dp2)^2./(4.*variant_Din.*variant_lp2(i));%开孔率
+    para(i).vhpicStruct.bp1 = 0.08;
+    para(i).vhpicStruct.bp2 = 0.08;
+    para(i).vhpicStruct.n1 = para(i).vhpicStruct.bp1.*(4.*variant_Din.*variant_lp1(i))./((variant_dp1)^2);
+    para(i).vhpicStruct.n2 = para(i).vhpicStruct.bp2.*(4.*variant_Din.*variant_lp2(i))./((variant_dp2)^2);
     para(i).vhpicStruct.nc1 = 8;%假设一圈有8个孔
     para(i).vhpicStruct.nc2 = 8;%假设一圈有8个孔
-    para(i).vhpicStruct.Cloum1 = variant_n1./para(i).vhpicStruct.nc1;%计算一端固定开孔长度的孔管上能开多少圈孔
-    para(i).vhpicStruct.Cloum2 = variant_n2./para(i).vhpicStruct.nc2;
+    para(i).vhpicStruct.Cloum1 = para(i).vhpicStruct.n1./para(i).vhpicStruct.nc1;%计算一端固定开孔长度的孔管上能开多少圈孔
+    para(i).vhpicStruct.Cloum2 = para(i).vhpicStruct.n2./para(i).vhpicStruct.nc2;
     para(i).vhpicStruct.s1 = ((variant_lp1(i)./para(i).vhpicStruct.Cloum1)-variant_dp1)./2;%相邻两开孔之间间隔，默认等间隔
     para(i).vhpicStruct.s2 = ((variant_lp2(i)./para(i).vhpicStruct.Cloum2)-variant_dp2)./2;
     para(i).vhpicStruct.sc1 = (pi.*variant_Din - para(i).vhpicStruct.nc1.*para(i).vhpicStruct.dp1)./para(i).vhpicStruct.nc1;%一周开孔，相邻孔间距
@@ -135,8 +129,8 @@ for i = 1:length(variant_lp1)
     para(i).vhpicStruct.xSection1 = [0,ones(1,sectionNum1).*(l/(sectionNum1))];
     l = para(i).vhpicStruct.lp2;
     para(i).vhpicStruct.xSection2 = [0,ones(1,sectionNum2).*(l/(sectionNum2))];
-    para(i).sectionL1 = 0:0.25:para(i).L1;
-    para(i).sectionL2 = 0:0.25:para(i).L2;
+    para(i).sectionL1 = 0:0.5:para(i).L1;
+    para(i).sectionL2 = 0:0.5:para(i).L2;
     para(i).vhpicStruct.lv1 = para(i).vhpicStruct.Lv./2-0.232;%232
     para(i).vhpicStruct.lv2 = 0;%出口不偏置
     para(i).vhpicStruct.Dbias = 0;%无内插管
@@ -180,7 +174,7 @@ for i = 1:length(para)
         sepratorIndex = temp(1);
         temp = straightPipePulsationCalc(massFlowE,Fre,time,straightPipeLength,straightPipeSection...
         ,'d',para(i).Dpipe,'a',opt.acousticVelocity,'isDamping',opt.isDamping...
-        ,'friction',SreaightCoeffFriction,'meanFlowVelocity',SreaightMeanFlowVelocity...
+        ,'friction',opt.coeffFriction,'meanFlowVelocity',opt.meanFlowVelocity...
         ,'m',para(i).opt.mach,'notMach',para(i).opt.notMach,...
         'isOpening',isOpening);
         plusStraight = calcPuls(temp,dcpss);
@@ -211,8 +205,8 @@ for i = 1:length(para)
         para(i).L1,para(i).L2,para(i).Dpipe...
         ,para(i).vhpicStruct,...
         para(i).sectionL1,para(i).sectionL2,...
-        'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',PerfClosedCoeffFriction,...
-        'meanFlowVelocity',PerfClosedMeanFlowVelocity,...
+        'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',para(i).opt.coeffFriction,...
+        'meanFlowVelocity',para(i).opt.meanFlowVelocity,...
         'm',para(i).opt.mach,'notMach',para(i).opt.notMach,...
         'isOpening',isOpening);%,'coeffDamping',para(i).opt.coeffDamping,
     plus1ClosedIB{i} = calcPuls(pressure1ClosedIB,dcpss);

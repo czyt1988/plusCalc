@@ -97,26 +97,31 @@ Sv = pi .* Dv.^2 ./ 4;%缓冲罐截面积
 Sp = pi*Din.^2./4;%孔管管径截面积
 Sv_p = Sv-Sp;%去除孔管的缓冲罐截面积
 Dv_inner = (4*Sv_p/pi).^0.5;%计算名义直径
+mfvStraight = nan;
 mfvVessel = nan;
 mfvInnerPipe = nan;
 mfvVessel_Inner = nan;
 if ~isnan(meanFlowVelocity)
     if 1 == length(meanFlowVelocity)
+        mfvStraight = meanFlowVelocity;
         mfvVessel = meanFlowVelocity*S/Sv;
         mfvVessel_Inner = meanFlowVelocity*S/Sv_p;
         mfvInnerPipe = meanFlowVelocity*S/Sp;
         meanFlowVelocity = [meanFlowVelocity,mfvVessel,mfvVessel_Inner,mfvInnerPipe];
     elseif 2 == length(meanFlowVelocity)
+        mfvStraight = meanFlowVelocity(1);
         mfvVessel = meanFlowVelocity(2);
         mfvVessel_Inner = meanFlowVelocity*S/Sv_p;
         mfvInnerPipe = meanFlowVelocity*S/Sp;
         meanFlowVelocity = [meanFlowVelocity,mfvVessel_Inner,mfvInnerPipe];
     elseif 3 == length(meanFlowVelocity)
+        mfvStraight = meanFlowVelocity(1);
         mfvVessel = meanFlowVelocity(2);
         mfvVessel_Inner = meanFlowVelocity(3);
         mfvInnerPipe = meanFlowVelocity*S/Sp;
         mfvInnerPipe = [meanFlowVelocity,mfvInnerPipe];
     elseif 4 == length(meanFlowVelocity)
+        mfvStraight = meanFlowVelocity(1);
         mfvVessel = meanFlowVelocity(2);
         mfvVessel_Inner = meanFlowVelocity(3);
         mfvInnerPipe = meanFlowVelocity(4);
@@ -157,17 +162,28 @@ optMach.machVesselWithInnerPipe = mach(3);
 optMach.machInnerPipe = mach(4);
 
 optDamping.isDamping = isDamping;
-optDamping.coeffDampStraight = coeffDamping(1);
-optDamping.mfvStraight = meanFlowVelocity(1);
+if isDamping
+    optDamping.coeffDampStraight = coeffDamping(1);
+    optDamping.coeffDampVessel = coeffDamping(2);%缓冲罐的阻尼系数
+    optDamping.coeffDampVesselWithInnerPipe = coeffDamping(3);%缓冲罐的阻尼系数
+    optDamping.coeffDampInnerPipe = coeffDamping(4);%缓冲罐的阻尼系数
+    
+    optDamping.mfvStraight = meanFlowVelocity(1);
+    optDamping.mfvVessel = meanFlowVelocity(2);
+    optDamping.mfvVesselWithInnerPipe = meanFlowVelocity(3);
+    optDamping.mfvInnerPipe = meanFlowVelocity(4);
+else
+    optDamping.coeffDampStraight = nan;
+    optDamping.coeffDampVessel = nan;%缓冲罐的阻尼系数
+    optDamping.coeffDampVesselWithInnerPipe = nan;%缓冲罐的阻尼系数
+    optDamping.coeffDampInnerPipe = nan;%缓冲罐的阻尼系数
+    
+    optDamping.mfvStraight = mfvStraight;
+    optDamping.mfvVessel = mfvVessel;
+    optDamping.mfvVesselWithInnerPipe = mfvVessel_Inner;
+    optDamping.mfvInnerPipe = mfvInnerPipe;
+end
 
-optDamping.coeffDampVessel = coeffDamping(2);%缓冲罐的阻尼系数
-optDamping.mfvVessel = meanFlowVelocity(2);
-
-optDamping.coeffDampVesselWithInnerPipe = coeffDamping(3);%缓冲罐的阻尼系数
-optDamping.mfvVesselWithInnerPipe = meanFlowVelocity(3);
-
-optDamping.coeffDampInnerPipe = coeffDamping(4);%缓冲罐的阻尼系数
-optDamping.mfvInnerPipe = meanFlowVelocity(4);
 
 
 
