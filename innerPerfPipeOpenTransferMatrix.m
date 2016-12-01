@@ -155,6 +155,11 @@ function sig0 = calcSigma0(bp)
 %     if bp >= 0.4
 %     	error('穿孔率不能大于40%');
 %     end
+if
+end
+
+
+
 end
 
 function R = calcR(D)
