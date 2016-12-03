@@ -71,7 +71,7 @@ opt.coeffDamping = nan;%阻尼
 opt.coeffFriction = 0.04;%管道摩察系数
 SreaightMeanFlowVelocity =20;%14.5;%管道平均流速
 SreaightCoeffFriction = 0.03;
-VesselMeanFlowVelocity =8;%14.5;%缓冲罐平均流速
+VesselMeanFlowVelocity = 8;%14.5;%缓冲罐平均流速
 VesselCoeffFriction = 0.003;
 PerfClosedMeanFlowVelocity =9;%14.5;%堵死孔管平均流速
 PerfClosedCoeffFriction = 0.04;
@@ -89,8 +89,8 @@ variant_n2 = [24];
 variant_dp1 = [0.013];
 variant_dp2 = [0.013];
 variant_Din = [0.098/2];
-variant_lp1 = [0.08;0.16;0.24;0.32;0.40;0.48];
-variant_lp2 = [0.08;0.16;0.24;0.32;0.40;0.48];
+variant_lp1 = [0.05;0.08;0.16;0.24;0.32;0.40;0.48];
+variant_lp2 = [0.05;0.08;0.16;0.24;0.32;0.40;0.48];
 % variant_Lv1 = 0.568:0.02:0.84;
 calcDatas = {};
 
@@ -207,7 +207,7 @@ for i = 1:length(para)
     pressure2ClosedIB = [];
 
     [pressure1ClosedIB,pressure2ClosedIB] = ...
-        vesselInBiasHaveInnerPerfBothClosedCompCalc(massFlowE,Fre,time,...
+         vesselInBiasHaveInnerPerfBothClosedCompCalc(massFlowE,Fre,time,...
         para(i).L1,para(i).L2,para(i).Dpipe...
         ,para(i).vhpicStruct,...
         para(i).sectionL1,para(i).sectionL2,...

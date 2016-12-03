@@ -309,25 +309,25 @@ for i = 1:length(para)
     end
 end
     
-%     %计算脉动抑制率
-%     temp = plusOVIB;
-%     temp2 = plusOpenIB{i};
-% 
-%     temp(temp<1e-4) = 1;
-%     temp2(temp<1e-4) = 1;%temp小于1e-4时，temp2也设置为1.
-%     reduceRate{i} = (temp - temp2)./temp;
-% 
-%     if isempty(plus1ClosedIB{i})
-%         maxPlus1(i) = nan;
-%     else
-%         maxPlus1(i) = max(plus1ClosedIB{i});
-%     end
-% 
-%     if isempty(plus2ClosedIB{i})
-%         maxPlus2(i) = nan;
-%     else
-%         maxPlus2(i) = max(plus2ClosedIB{i});
-%     end  
+    %计算脉动抑制率
+    temp = plusOVIB;
+    temp2 = plusClosedIB{i};
+
+    temp(temp<1e-4) = 1;
+    temp2(temp<1e-4) = 1;%temp小于1e-4时，temp2也设置为1.
+    reduceRate{i} = (temp - temp2)./temp;
+
+    if isempty(plus1ClosedIB{i})
+        maxPlus1(i) = nan;
+    else
+        maxPlus1(i) = max(plus1ClosedIB{i});
+    end
+
+    if isempty(plus2ClosedIB{i})
+        maxPlus2(i) = nan;
+    else
+        maxPlus2(i) = max(plus2ClosedIB{i});
+    end  
 
 
 ignoreHeader = 1;

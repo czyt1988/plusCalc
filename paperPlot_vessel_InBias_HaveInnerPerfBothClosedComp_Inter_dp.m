@@ -86,8 +86,8 @@ sectionNum1 =[1];%对应孔1的组数
 sectionNum2 =[1];%对应孔2的组数
 variant_n2 = [24];
 variant_lp2 = [0.16];
-variant_dp2 = 0.007:0.003:0.016;
-variant_dp1 = 0.007:0.003:0.016;%0.01*ones(1,size(variant_dp2,2));%0.007:0.003:0.016;
+variant_dp2 = 0.007:0.003:0.019;
+variant_dp1 = 0.007:0.003:0.019;%0.01*ones(1,size(variant_dp2,2));%0.007:0.003:0.016;
 
 % variant_Lv1 = 0.568:0.02:0.84;
 calcDatas = {};

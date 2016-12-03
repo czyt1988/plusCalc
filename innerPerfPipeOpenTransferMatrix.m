@@ -151,15 +151,15 @@ function D = calcD(n2,dp2,Din,Dv,lp2,k,M1,M2,R0,lc,xSection2)
 end
 
 function sig0 = calcSigma0(bp)
-    %sig0 = 0.8216*(1-1.5443*bp^0.5+0.3508*bp+0.1935*bp^1.5);%穿孔管的端部修正系数（穿孔率小于40%）
+    sig0 = 0.8216*(1-1.5443*bp^0.5+0.3508*bp+0.1935*bp^1.5);%穿孔管的端部修正系数（穿孔率小于40%）
 %     if bp >= 0.4
 %     	error('穿孔率不能大于40%');
 %     end
-if 0<sqrt(bp./pi)<=0.25
-    sig0 = 0.85.*(1-2.34.*sqrt(bp./pi));
-elseif 0.25<sqrt(bp./pi)<=0.5
-    sig0 = 0.668.*(1-1.9.*sqrt(bp./pi));    
-end
+% if 0<sqrt(bp./pi) && sqrt(bp./pi)<=0.25
+%     sig0 = 0.85.*(1-2.34.*sqrt(bp./pi));
+% elseif 0.25<sqrt(bp./pi) && sqrt(bp./pi)<=0.5
+%     sig0 = 0.668.*(1-1.9.*sqrt(bp./pi));    
+% end
 end
 
 function R = calcR(D)

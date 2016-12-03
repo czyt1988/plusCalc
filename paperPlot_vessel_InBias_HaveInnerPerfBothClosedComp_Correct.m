@@ -82,10 +82,10 @@ opt.isUseStaightPipe = 1;%计算容器传递矩阵的方法
 opt.mach = opt.meanFlowVelocity / opt.acousticVelocity;
 opt.notMach = 1;
 
-variant_n1 = [72];              %variant_n = [6,6];sectionNum1 =[1,6];%对应孔1的组数sectionNum2 =[1,1];%对应孔2的组数
+variant_n1 = [24];              %variant_n = [6,6];sectionNum1 =[1,6];%对应孔1的组数sectionNum2 =[1,1];%对应孔2的组数
 sectionNum1 =[1];%对应孔1的组数
 sectionNum2 =[1];%对应孔2的组数
-variant_n2 = [72];
+variant_n2 = [24];
 variant_lp2 = [0.16];
 calcDatas = {};
 
