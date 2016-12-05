@@ -89,13 +89,13 @@ variant_n2 = [24];
 variant_dp1 = [0.013];
 variant_dp2 = [0.013];
 variant_Din = [0.098/2];
-variant_lp1 = [0.05;0.08;0.16;0.24;0.32;0.40;0.48];
+variant_lp1 = [0.16;0.16;0.16;0.16;0.16;0.16;0.16];%[0.05;0.08;0.16;0.24;0.32;0.40;0.48];
 variant_lp2 = [0.05;0.08;0.16;0.24;0.32;0.40;0.48];
 % variant_Lv1 = 0.568:0.02:0.84;
 calcDatas = {};
 
 
-for i = 1:length(variant_lp1)     
+for i = 1:length(variant_lp2)     
     para(i).opt = opt;
     para(i).L1 = 3.5;%L1(m)
     para(i).L2 = 6;%L2£¨m£©³¤¶È
@@ -103,7 +103,7 @@ for i = 1:length(variant_lp1)
     para(i).vhpicStruct.l = 0.01;
     para(i).vhpicStruct.Dv = 0.372;%»º³å¹ÞµÄÖ±¾¶£¨m£©
     para(i).vhpicStruct.Lv = 1.1;%»º³å¹Þ×Ü³¤ 
-    para(i).vhpicStruct.Lv1 =para(i).vhpicStruct.Lv./2;%»º³å¹ÞÇ»1×Ü³¤
+    para(i).vhpicStruct.Lv1 =0.76;%para(i).vhpicStruct.Lv./2;%»º³å¹ÞÇ»1×Ü³¤
     para(i).vhpicStruct.Lv2 = para(i).vhpicStruct.Lv-para(i).vhpicStruct.Lv1;%»º³å¹ÞÇ»2×Ü³¤
     para(i).vhpicStruct.lc = 0.005;%ÄÚ²å¹Ü±Úºñ
     para(i).vhpicStruct.dp1 = variant_dp1;%¿ª¿×¾¶

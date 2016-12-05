@@ -91,13 +91,13 @@ variant_dp2 = [0.013];
 variant_Din = [0.098/2];
 variant_lp1 = [0.16];
 variant_lp2 = [0.16];
-variant_lb2 = [0.01;0.06;0.11;0.16;0.21;0.26;0.31];
+variant_lb1 = [0.01;0.06;0.11;0.16;0.21;0.26;0.31];
 variant_la2 = [0.06;0.06;0.06;0.06;0.06;0.06;0.06];
 % variant_Lv1 = 0.568:0.02:0.84;
 calcDatas = {};
 
 
-for i = 1:length(variant_lb2)     
+for i = 1:length(variant_lb1)     
     para(i).opt = opt;
     para(i).L1 = 3.5;%L1(m)
     para(i).L2 = 6;%L2（m）长度
@@ -105,7 +105,7 @@ for i = 1:length(variant_lb2)
     para(i).vhpicStruct.l = 0.01;
     para(i).vhpicStruct.Dv = 0.372;%缓冲罐的直径（m）
     para(i).vhpicStruct.Lv = 1.1;%缓冲罐总长 
-    para(i).vhpicStruct.Lv1 = 0.26;%0.84;%para(i).vhpicStruct.Lv./2;%缓冲罐腔1总长
+    para(i).vhpicStruct.Lv1 = 0.66;%0.66；%0.84;%para(i).vhpicStruct.Lv./2;%缓冲罐腔1总长
     para(i).vhpicStruct.Lv2 = para(i).vhpicStruct.Lv-para(i).vhpicStruct.Lv1;%缓冲罐腔2总长
     para(i).vhpicStruct.lc = 0.005;%内插管壁厚
     para(i).vhpicStruct.dp1 = variant_dp1;%开孔径
@@ -117,10 +117,10 @@ for i = 1:length(variant_lb2)
     para(i).vhpicStruct.n1 = variant_n1;%入口段孔数
     para(i).vhpicStruct.n2 = variant_n2;%出口段孔数
     para(i).vhpicStruct.la2 = variant_la2(i);%孔管入口段靠近入口长度
-    para(i).vhpicStruct.lb2 = variant_lb2(i);
+    para(i).vhpicStruct.lb1 = variant_lb1(i);
     para(i).vhpicStruct.la1 = 0.03;%para(i).vhpicStruct.Lin-variant_la2(i)-variant_lp1;
-    para(i).vhpicStruct.lb1 = 0.06;%para(i).vhpicStruct.Lout-variant_lb2(i)-variant_lp2;
-    para(i).vhpicStruct.Lout = variant_lb2(i)+variant_lp2+para(i).vhpicStruct.lb1;
+    para(i).vhpicStruct.lb2 = 0.03;%para(i).vhpicStruct.Lout-variant_lb2(i)-variant_lp2;
+    para(i).vhpicStruct.Lout = variant_lb1(i)+variant_lp2+para(i).vhpicStruct.lb2;
     para(i).vhpicStruct.Din = variant_Din;
     para(i).vhpicStruct.bp1 = variant_n1.*(variant_dp1)^2./(4.*variant_Din.*variant_lp1);%开孔率
     para(i).vhpicStruct.bp2 = variant_n2.*(variant_dp2)^2./(4.*variant_Din.*variant_lp2);%开孔率
@@ -150,7 +150,7 @@ for i = 1:length(variant_lb2)
             ,para(i).vhpicStruct.Lin,para(i).vhpicStruct.la1,para(i).vhpicStruct.la2...
             ,sum(para(i).vhpicStruct.xSection1),variant_dp2);
     end
-    name{i} = sprintf('lb2:%g',variant_lb2(i));
+    name{i} = sprintf('lb1:%g',variant_lb1(i));
 end
 
 dcpss = getDefaultCalcPulsSetStruct();
@@ -221,7 +221,7 @@ for i = 1:length(para)
     plusClosedIB{i} = [plus1ClosedIB{i},plus2ClosedIB{i}];
     multFreAmpValueClosedIB{i} = calcWaveFreAmplitude([pressure1ClosedIB,pressure2ClosedIB],Fs,multFre,'freErr',1);
     
-    calcDatas{dataCount,1} = sprintf('入口偏置内插孔管两端堵死缓冲罐,lb2:%g',variant_lb2(i));
+    calcDatas{dataCount,1} = sprintf('入口偏置内插孔管两端堵死缓冲罐,lb1:%g',variant_lb1(i));
     calcDatas{dataCount,2} = X;
     calcDatas{dataCount,3} = plusClosedIB{i};
     calcDatas{dataCount,4} = multFreAmpValueClosedIB{i}(1,:);
