@@ -71,7 +71,7 @@ opt.coeffDamping = nan;%阻尼
 opt.coeffFriction = 0.04;%管道摩察系数
 SreaightMeanFlowVelocity =20;%14.5;%管道平均流速
 SreaightCoeffFriction = 0.03;
-VesselMeanFlowVelocity = 8;%14.5;%缓冲罐平均流速
+VesselMeanFlowVelocity =8;%14.5;%缓冲罐平均流速
 VesselCoeffFriction = 0.003;
 PerfClosedMeanFlowVelocity =9;%14.5;%堵死孔管平均流速
 PerfClosedCoeffFriction = 0.04;
@@ -90,19 +90,19 @@ variant_lp2 = [0.16];
 calcDatas = {};
 
 
-for i = 1:length(variant_n1)     
+for i = 1:length(variant_lp2)     
     para(i).opt = opt;
     para(i).L1 = 3.5;%L1(m)
     para(i).L2 = 6;%L2（m）长度
     para(i).Dpipe = 0.098;%管道直径（m）
     para(i).vhpicStruct.l = 0.01;
     para(i).vhpicStruct.Dv = 0.372;%缓冲罐的直径（m）
-    para(i).vhpicStruct.Lv1 = 1.1/2;%缓冲罐腔1总长
-    para(i).vhpicStruct.Lv2 = 1.1/2;%缓冲罐腔2总长
+    para(i).vhpicStruct.Lv = 1.1;%缓冲罐总长 
+    para(i).vhpicStruct.Lv1 =para(i).vhpicStruct.Lv./2;%缓冲罐腔1总长
+    para(i).vhpicStruct.Lv2 = para(i).vhpicStruct.Lv-para(i).vhpicStruct.Lv1;%缓冲罐腔2总长
     para(i).vhpicStruct.lc = 0.005;%内插管壁厚
     para(i).vhpicStruct.dp1 = 0.013;%开孔径
     para(i).vhpicStruct.dp2 = 0.013;%开孔径
-    para(i).vhpicStruct.Lin = 0.25;%内插管入口段长度
     para(i).vhpicStruct.lp1 = 0.16;%内插管入口段非孔管开孔长度
     para(i).vhpicStruct.lp2 = variant_lp2(i);%内插管出口段孔管开孔长度
     para(i).vhpicStruct.n1 = variant_n1(i);%入口段孔数
@@ -112,7 +112,8 @@ for i = 1:length(variant_n1)
     para(i).vhpicStruct.lb1 = 0.06;
     para(i).vhpicStruct.lb2 = 0.03;
     para(i).vhpicStruct.Din = 0.098/2;
-    para(i).vhpicStruct.Lout = 0.25;
+    para(i).vhpicStruct.Lin = para(i).vhpicStruct.la1+ para(i).vhpicStruct.lp1+para(i).vhpicStruct.la2;%0.25;%内插管入口段长度
+    para(i).vhpicStruct.Lout = para(i).vhpicStruct.lb1+ para(i).vhpicStruct.lp2+para(i).vhpicStruct.lb2;%0.25;
     para(i).vhpicStruct.bp1 = variant_n1.*(para(i).vhpicStruct.dp1)^2./(4.*para(i).vhpicStruct.Din.*para(i).vhpicStruct.lp1);%开孔率
     para(i).vhpicStruct.bp2 = variant_n2.*(para(i).vhpicStruct.dp2)^2./(4.*para(i).vhpicStruct.Din.*para(i).vhpicStruct.lp2);%开孔率
     para(i).vhpicStruct.nc1 = 8;%假设一圈有8个孔
@@ -141,7 +142,7 @@ for i = 1:length(variant_n1)
             ,para(i).vhpicStruct.Lin,para(i).vhpicStruct.la1,para(i).vhpicStruct.la2...
             ,sum(para(i).vhpicStruct.xSection1),para(i).vhpicStruct.dp);
     end
-    name{i} = sprintf('n1:%g',variant_n1(i));
+    name{i} = sprintf('lp2:%g',variant_lp2(i));
 end
 
 dcpss = getDefaultCalcPulsSetStruct();
@@ -213,7 +214,7 @@ for i = 1:length(para)
     plusClosedIB{i} = [plus1ClosedIB{i},plus2ClosedIB{i}];
     multFreAmpValueClosedIB{i} = calcWaveFreAmplitude([pressure1ClosedIB,pressure2ClosedIB],Fs,multFre,'freErr',1);
     
-    calcDatas{dataCount,1} = sprintf('入口偏置内插孔管两端堵死缓冲罐,n1:%g,n2:%g',variant_n1(i),variant_n2(i));
+    calcDatas{dataCount,1} = sprintf('入口偏置内插孔管两端堵死缓冲罐,lp2:%g,n1:%g,n1:%g,n2:%g',variant_lp2(i),variant_n1(i),variant_n2(i));
     calcDatas{dataCount,2} = X;
     calcDatas{dataCount,3} = plusClosedIB{i};
     calcDatas{dataCount,4} = multFreAmpValueClosedIB{i}(1,:);
@@ -246,7 +247,7 @@ for i = 1:length(para)
     if i == 1
         
         [pressure1Temp,pressure2Temp] = vesselBiasStraightPulsationCalc(massFlowE,Fre,time,...
-            para(i).L1,para(i).L2,...
+             para(i).L1,para(i).L2,...
             para(i).vhpicStruct.Lv1+para(i).vhpicStruct.Lv2,para(i).vhpicStruct.l,para(i).Dpipe,para(i).vhpicStruct.Dv,...
             para(i).vhpicStruct.lv1,para(i).vhpicStruct.Dbias,...
             para(i).sectionL1,para(i).sectionL2,...
