@@ -43,8 +43,8 @@ Dv = 0.372;%缓冲罐的直径（m）
 Lv = 1.1;%缓冲罐总长 
 Lv1 =Lv./2;%缓冲罐腔1总长
 lc = 0.005;%内插管壁厚
-dp1 = 0.013;%开孔径
-dp2 = 0.013;%开孔径
+dp1 = variant_dp1;%开孔径
+dp2 = variant_dp2;%开孔径
 %     Lin = 0.25;%内插管入口段长度
 lp1 = 0.16;%内插管入口段非孔管开孔长度
 lp2 = 0.16;%内插管出口段孔管开孔长度
@@ -71,9 +71,7 @@ res = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency.
     ,'coeffFriction',coeffFriction...
     ,'dcpss',dcpss...
     ,'accuracy',0.5 ...
-    ,'sectionNum1',sectionNum1...
-    ,'sectionNum1',sectionNum2...
-    ,'Dbias',Dbias...
+    ,'sectionNum1',sectionNum1
 );
 end
 
@@ -196,8 +194,8 @@ end
 [sectionNum2,varargin]= takeVararginProperty('sectionNum2',varargin,1);
 
 
-% [lv1,varargin]= takeVararginProperty('lv1',varargin,0);%偏置长度
-% [lv2,varargin]= takeVararginProperty('lv2',varargin,0);
+[lv1,varargin]= takeVararginProperty('lv1',varargin,0);%偏置长度
+[lv2,varargin]= takeVararginProperty('lv2',varargin,0);
 [Dbias,varargin]= takeVararginProperty('Dbias',varargin,0);%内插管长
 if ~isstruct(dcpss)
     dcpss = getDefaultCalcPulsSetStruct();
@@ -393,8 +391,8 @@ for i = 1:iteCount
     vhpicStruct.nc2 = para(i).nc2;
     vhpicStruct.xSection1 = para(i).xSection1;
     vhpicStruct.xSection2 = para(i).xSection2;
-%     vhpicStruct.lv1 = lv1;
-%     vhpicStruct.lv2 = lv2;
+    vhpicStruct.lv1 = lv1;
+    vhpicStruct.lv2 = lv2;
     vhpicStruct.Dbias = Dbias;
     [pressure1,pressure2] = ...
          vesselInBiasHaveInnerPerfBothClosedCompCalc(massFlowE,Fre,time,...
