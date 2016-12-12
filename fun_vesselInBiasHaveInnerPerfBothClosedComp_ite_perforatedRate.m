@@ -1,4 +1,4 @@
-function resCell = fun_vesselInBiasHaveInnerPerfBothClosedComp_ite_perforatedRate(varargin)
+function [resN1,resLp1,resDin,resDp1] = fun_vesselInBiasHaveInnerPerfBothClosedComp_ite_perforatedRate()
 
 %迭代穿孔率的相关参数
 currentPath = fileparts(mfilename('fullpath'));
@@ -42,6 +42,7 @@ l = 0.01;
 Dv = 0.372;%缓冲罐的直径（m）
 Lv = 1.1;%缓冲罐总长 
 Lv1 =Lv./2;%缓冲罐腔1总长
+Lv2 = Lv - Lv1;
 lc = 0.005;%内插管壁厚
 dp1 = 0.013;%开孔径
 dp2 = 0.013;%开孔径
@@ -55,14 +56,18 @@ lb2 = 0.06;
 la2 = 0.06;
 lb1 = 0.03;
 Din = 0.049;
+lv1 = Lv./2-0.232;%232
 sectionNum1 = [1];%对应孔1的组数
 sectionNum2 = [1];%对应孔2的组数
 Dbias = 0;%无内插管
-res = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency...
+
+%迭代n1
+n1Ite = [8,16,24,32,40,48,56,64,72,80,88]
+resN1 = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency...
     ,acousticVelocity...
     ,meanFlowVelocity...
-    ,L1,L2,l,Dpipe,Dv,Lv,Lv1,lc ...
-    ,dp1,dp2,n1,n2,la1,la2,lb1,lb2,Din...
+    ,L1,L2,l,Dpipe,Dv,Lv,Lv1,lc,lp1,lp2,lv1...
+    ,dp1,dp2,n1Ite,n2,la1,la2,lb1,lb2,Din...
     ,'n1'...
     ,'multfre',multfre...
     ,'isOpening',isOpening...
@@ -74,16 +79,82 @@ res = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency.
     ,'sectionNum1',sectionNum1...
     ,'sectionNum1',sectionNum2...
     ,'Dbias',Dbias...
+    ,'isCalcPureVessel',1 ...
 );
+%迭代穿孔长度
+lp1Ite = [0.05;0.06;0.07;0.08;0.10;0.12;0.16;0.24;0.32;0.40;0.48];
+resLp1 = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency...
+    ,acousticVelocity...
+    ,meanFlowVelocity...
+    ,L1,L2,l,Dpipe,Dv,Lv,Lv1,lc,lp1Ite,lp2,lv1...
+    ,dp1,dp2,n1,n2,la1,la2,lb1,lb2,Din...
+    ,'lp1'...
+    ,'multfre',multfre...
+    ,'isOpening',isOpening...
+    ,'isDamping',isDamping...
+    ,'coeffDamping',coeffDamping...
+    ,'coeffFriction',coeffFriction...
+    ,'dcpss',dcpss...
+    ,'accuracy',0.5 ...
+    ,'sectionNum1',sectionNum1...
+    ,'sectionNum1',sectionNum2...
+    ,'Dbias',Dbias...
+    ,'isCalcPureVessel',0 ...
+);
+
+%迭代孔管管径
+DinIte = [0.15*0.098,0.165*0.098,0.185*0.098,0.2*0.098,0.23*0.098,0.26*0.098,0.3*0.098,0.4*0.098,0.5*0.098,0.6*0.098,0.75*0.098,0.098,0.098*2];
+resDin = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency...
+    ,acousticVelocity...
+    ,meanFlowVelocity...
+    ,L1,L2,l,Dpipe,Dv,Lv,Lv1,lc,lp1,lp2,lv1...
+    ,dp1,dp2,n1,n2,la1,la2,lb1,lb2,DinIte...
+    ,'Din'...
+    ,'multfre',multfre...
+    ,'isOpening',isOpening...
+    ,'isDamping',isDamping...
+    ,'coeffDamping',coeffDamping...
+    ,'coeffFriction',coeffFriction...
+    ,'dcpss',dcpss...
+    ,'accuracy',0.5 ...
+    ,'sectionNum1',sectionNum1...
+    ,'sectionNum1',sectionNum2...
+    ,'Dbias',Dbias...
+    ,'isCalcPureVessel',0 ...
+);
+%迭代孔径
+Dp1Ite = [0.013];
+resDp1 = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency...
+    ,acousticVelocity...
+    ,meanFlowVelocity...
+    ,L1,L2,l,Dpipe,Dv,Lv,Lv1,lc,lp1,lp2,lv1...
+    ,Dp1Ite,dp2,n1,n2,la1,la2,lb1,lb2,Din...
+    ,'dp1'...
+    ,'multfre',multfre...
+    ,'isOpening',isOpening...
+    ,'isDamping',isDamping...
+    ,'coeffDamping',coeffDamping...
+    ,'coeffFriction',coeffFriction...
+    ,'dcpss',dcpss...
+    ,'accuracy',0.5 ...
+    ,'sectionNum1',sectionNum1...
+    ,'sectionNum1',sectionNum2...
+    ,'Dbias',Dbias...
+    ,'isCalcPureVessel',0 ...
+);
+% resCell = {};
+% resCell = cellPush2Bottom(resCell,resN1,resLp1,resDin,resDp1);
+% [resN1,resLp1,resDin,resDp1]
+
 end
 
 
 
 
 
-function calcDatas = funIteratorVesselPipeLinePlusCalc(time,massFlow,Fs,plusBaseFrequency,acousticVelocity...
+function calcDatas = funIteratorVesselPipeLinePlusCalc(time,massFlowE,Fre,Fs,plusBaseFrequency,acousticVelocity...
     ,meanFlowVelocity ...
-    ,L1,L2,l,Dpipe,Dv,Lv,Lv1,lc ...
+    ,L1,L2,l,Dpipe,Dv,Lv2,Lv1,lc,lp1,lp2,lv1 ...
     ,dp1,dp2,n1,n2,la1,la2,lb1,lb2,Din ...
     ,IteratorValueName,varargin)
 %缓冲罐中间插入孔管,两端堵死，开孔个数不足以等效为亥姆霍兹共鸣器(缓冲罐入口偏置)
@@ -165,22 +236,11 @@ iteCount = eval(sprintf('length(%s)',IteratorValueName));
 
 % 
 % xSection1，xSection2 孔管每圈孔的间距，从0开始算，x的长度为孔管孔的圈数+1，x的值是当前一圈孔和上一圈孔的距离，如果间距一样，那么x里的值都一样
-Lv2 = Lv - Lv1;%获取缓冲罐另一边长
+Lv = Lv2 + Lv1;%获取缓冲罐另一边长
+lv2 = 0;
 [multFre,varargin]= takeVararginProperty('multfre',varargin,[10,20,30]);
 [isOpening,varargin]= takeVararginProperty('isOpening',varargin,1);
-[useCalcTopFreIndex,varargin]= takeVararginProperty('useCalcTopFreIndex',varargin,nan);
 
-[FreRaw,AmpRaw,~,massFlowE] = frequencySpectrum(detrend(massFlow,'constant'),Fs);
-Fre = FreRaw;
-% 提取主要频率
-[~,locs] = findpeaks(AmpRaw,'SORTSTR','descend');
-Fre = FreRaw(locs);
-massFlowE = massFlowE(locs);
-
-if ~isnan(useCalcTopFreIndex)
-    Fre = Fre(useCalcTopFreIndex);
-    massFlowE = massFlowE(useCalcTopFreIndex);
-end
 %是否带阻尼
 [isDamping,varargin]= takeVararginProperty('isDamping',varargin,1);
 %阻尼系数
@@ -199,6 +259,7 @@ end
 % [lv1,varargin]= takeVararginProperty('lv1',varargin,0);%偏置长度
 % [lv2,varargin]= takeVararginProperty('lv2',varargin,0);
 [Dbias,varargin]= takeVararginProperty('Dbias',varargin,0);%内插管长
+[isCalcPureVessel,varargin]= takeVararginProperty('isCalcPureVessel',varargin,0);%是否计算单一缓冲罐
 if ~isstruct(dcpss)
     dcpss = getDefaultCalcPulsSetStruct();
     dcpss.calcSection = [0.3,0.7];
@@ -221,33 +282,37 @@ opt.isUseStaightPipe = 1;%计算容器传递矩阵的方法
 opt.mach = opt.meanFlowVelocity / opt.acousticVelocity;
 opt.notMach = 0;
 
-para(1:iteCount).opt = opt;
-para(1:iteCount).L1 = L1;%L1(m)
-para(1:iteCount).L2 = L2;%L2（m）长度
-para(1:iteCount).Dpipe = Dpipe;%管道直径（m）
-para(1:iteCount).l = l;
-para(1:iteCount).Dv = Dv;%缓冲罐的直径（m）
-para(1:iteCount).Lv = Lv;%缓冲罐总长
+para = [];
+para = setDataInStruct(para,opt,'opt',iteCount);
+para = setDataInStruct(para,L1,'L1',iteCount);%L1(m)
+para = setDataInStruct(para,L2,'L2',iteCount);%L2（m）长度
+para = setDataInStruct(para,Dpipe,'Dpipe',iteCount);%管道直径（m）
+para = setDataInStruct(para,l,'l',iteCount);
+para = setDataInStruct(para,Dv,'Dv',iteCount);%缓冲罐的直径（m）
+para = setDataInStruct(para,Lv,'Lv',iteCount);%缓冲罐总长
+para = setDataInStruct(para,Lv1,'Lv1',iteCount);%缓冲罐腔1总长
+para = setDataInStruct(para,Lv2,'Lv2',iteCount);%缓冲罐腔2总长
+para = setDataInStruct(para,lc,'lc',iteCount);%内插管壁厚
+para = setDataInStruct(para,dp1,'dp1',iteCount);%开孔径
+para = setDataInStruct(para,dp2,'dp2',iteCount);%开孔径
+para = setDataInStruct(para,lp1,'lp1',iteCount);%内插管入口段非孔管开孔长度
+para = setDataInStruct(para,lp2,'lp2',iteCount);%内插管入口段非孔管开孔长度
+para = setDataInStruct(para,n1,'n1',iteCount);%入口段孔数
+para = setDataInStruct(para,n2,'n2',iteCount);%出口段孔数
+para = setDataInStruct(para,n1,'n1',iteCount);
+para = setDataInStruct(para,n2,'n2',iteCount);
+para = setDataInStruct(para,la1,'la1',iteCount);%孔管入口段靠近入口长度
+para = setDataInStruct(para,la2,'la2',iteCount);%孔管
+para = setDataInStruct(para,lb1,'lb1',iteCount);
+para = setDataInStruct(para,lb2,'lb2',iteCount);
+para = setDataInStruct(para,Din,'Din',iteCount);
 
-para(1:iteCount).Lv1 = Lv1;%缓冲罐腔1总长
-para(1:iteCount).Lv2 = Lv2;%缓冲罐腔2总长
-para(1:iteCount).lc = lc;%内插管壁厚
-para(1:iteCount).dp1 = dp1;%开孔径
-para(1:iteCount).dp2 = dp2;%开孔径
-para(1:iteCount).lp1 = lp1;%内插管入口段非孔管开孔长度
-para(1:iteCount).lp2 = lp2;%内插管入口段非孔管开孔长度
-para(1:iteCount).n1 = n1;%入口段孔数
-para(1:iteCount).n2 = n2;%出口段孔数
-para(1:iteCount).la1 = la1;%孔管入口段靠近入口长度
-para(1:iteCount).la2 = la2;%孔管
-para(1:iteCount).lb1 = lb1;%孔管
-para(1:iteCount).lb2 = lb2;%孔管
-para(1:iteCount).Din = Din;%孔管
-para(1:iteCount).Lin = para(1:iteCount).la1 + para(1:iteCount).lp1 +para(1:iteCount).la2;%内插管入口段长度
-para(1:iteCount).Lout = para(1:iteCount).lb1 + para(1:iteCount).lp2 +para(1:iteCount).lb2;%内插管入口段长度
-para(1:iteCount).bp1 = calcPerforatingRatios(n1,dp1,Din,lp1);%开孔率
-para(1:iteCount).bp2 = calcPerforatingRatios(n2,dp2,Din,lp2);%开孔率
-
+for i = 1:iteCount
+    para(i).Lin =para(i).la1 + para(i).lp1+para(i).la2;%内插管入口段长度
+    para(i).Lout = para(i).lb1 + para(i).lp2+para(i).lb2;%内插管入口段长度
+end
+para = setDataInStruct(para,calcPerforatingRatios(n1,dp1,Din,lp1),'bp1',iteCount);%开孔率
+para = setDataInStruct(para,calcPerforatingRatios(n2,dp2,Din,lp2),'bp2',iteCount);%开孔率
 
 
 for i=1:iteCount
@@ -267,8 +332,9 @@ for i=1:iteCount
 
 end
 
-dataCount = 2; index = 2;
-
+dataCount = 2; index = 1;
+calcDatas{1,1} = '说明\变量名';
+indexName = index;
 index = index + 1; rawIndex = index;
 calcDatas{1,rawIndex} = 'rawData';
 
@@ -331,41 +397,44 @@ for i = 1:iteCount
      %计算单一缓冲罐
      X = [para(i).sectionL1,para(i).L1 + 2*para(i).l+para(i).Lv + para(i).sectionL2];
      if 1 == i
-        [pressure1OV,pressure2OV] = oneVesselPulsationCalc(massFlowE,Fre,time,...
-            para(i).L1,para(i).L2,...
-            para(i).Lv,para(i).l,para(i).Dpipe,para(i).Dv,...
-            para(i).sectionL1,para(i).sectionL2,...
-            'a',opt.acousticVelocity,'isDamping',opt.isDamping,'friction',opt.coeffFriction,...
-            'meanFlowVelocity',opt.meanFlowVelocity,'isUseStaightPipe',1,...
-            'm',opt.mach,'notMach',opt.notMach,...
-            'isOpening',isOpening);
-        
-        plus1OV = calcPuls(pressure1OV,dcpss);
-        plus2OV = calcPuls(pressure2OV,dcpss);
-        plusOV = [plus1OV,plus2OV];
-        if isempty(plus1OV)
-            maxPlus1 = nan;
-        else
-            maxPlus1= max(plus1OV);
-        end
-        if isempty(plus2OV)
-            maxPlus2 = nan;
-        else
-            maxPlus2 = max(plus2OV);
-        end  
-        
-        multFreAmpValue_OV = calcWaveFreAmplitude([pressure1OV,pressure2OV],Fs,multFre,'freErr',1);
-        temp = eval(sprintf('%s(i)',IteratorValueName));
-        calcDatas{dataCount,rawIndex} = [pressure1OV,pressure2OV];
-        calcDatas{dataCount,xIndex} = X;
-        calcDatas{dataCount,plusIndex} = [plus1OV,plus2OV];
-        calcDatas{dataCount,fre1Index} = multFreAmpValue_OV(1,:);
-        calcDatas{dataCount,fre2Index} = multFreAmpValue_OV(2,:);
-        calcDatas{dataCount,fre3Index} = multFreAmpValue_OV(3,:);
-        calcDatas{dataCount,preMaxPlusIndex} = maxPlus1;
-        calcDatas{dataCount,backMaxPlusIndex} = maxPlus2;
-        
-        dataCount = dataCount + 1;
+         if isCalcPureVessel
+            [pressure1OV,pressure2OV] = oneVesselPulsationCalc(massFlowE,Fre,time,...
+                para(i).L1,para(i).L2,...
+                para(i).Lv,para(i).l,para(i).Dpipe,para(i).Dv,...
+                para(i).sectionL1,para(i).sectionL2,...
+                'a',opt.acousticVelocity,'isDamping',opt.isDamping,'friction',opt.coeffFriction,...
+                'meanFlowVelocity',opt.meanFlowVelocity,'isUseStaightPipe',1,...
+                'm',opt.mach,'notMach',opt.notMach,...
+                'isOpening',isOpening);
+
+            plus1OV = calcPuls(pressure1OV,dcpss);
+            plus2OV = calcPuls(pressure2OV,dcpss);
+            plusOV = [plus1OV,plus2OV];
+            if isempty(plus1OV)
+                maxPlus1 = nan;
+            else
+                maxPlus1= max(plus1OV);
+            end
+            if isempty(plus2OV)
+                maxPlus2 = nan;
+            else
+                maxPlus2 = max(plus2OV);
+            end  
+
+            multFreAmpValue_OV = calcWaveFreAmplitude([pressure1OV,pressure2OV],Fs,multFre,'freErr',1);
+
+            calcDatas{dataCount,indexName} = '无内件缓冲罐';
+            calcDatas{dataCount,rawIndex} = [pressure1OV,pressure2OV];
+            calcDatas{dataCount,xIndex} = X;
+            calcDatas{dataCount,plusIndex} = plusOV;
+            calcDatas{dataCount,fre1Index} = multFreAmpValue_OV(1,:);
+            calcDatas{dataCount,fre2Index} = multFreAmpValue_OV(2,:);
+            calcDatas{dataCount,fre3Index} = multFreAmpValue_OV(3,:);
+            calcDatas{dataCount,preMaxPlusIndex} = maxPlus1;
+            calcDatas{dataCount,backMaxPlusIndex} = maxPlus2;
+
+            dataCount = dataCount + 1;
+         end
     end
     %计算孔管的数据
     vhpicStruct.l  = para(i).l;
@@ -389,21 +458,19 @@ for i = 1:iteCount
     vhpicStruct.Lout = para(i).Lout;
     vhpicStruct.bp1 = para(i).bp1;
     vhpicStruct.bp2 = para(i).bp2;
-    vhpicStruct.nc1 = para(i).nc1;
-    vhpicStruct.nc2 = para(i).nc2;
     vhpicStruct.xSection1 = para(i).xSection1;
     vhpicStruct.xSection2 = para(i).xSection2;
-%     vhpicStruct.lv1 = lv1;
-%     vhpicStruct.lv2 = lv2;
+    vhpicStruct.lv1 = lv1;
+    vhpicStruct.lv2 = lv2;
     vhpicStruct.Dbias = Dbias;
     [pressure1,pressure2] = ...
          vesselInBiasHaveInnerPerfBothClosedCompCalc(massFlowE,Fre,time,...
         para(i).L1,para(i).L2,para(i).Dpipe...
         ,vhpicStruct...
         ,para(i).sectionL1,para(i).sectionL2,...
-        'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',PerfClosedCoeffFriction,...
-        'meanFlowVelocity',PerfClosedMeanFlowVelocity,...
-        'm',para(i).opt.mach,'notMach',para(i).opt.notMach,...
+        'a',para(i).opt.acousticVelocity,'isDamping',para(i).opt.isDamping,'friction',opt.coeffFriction,...
+        'meanFlowVelocity',opt.meanFlowVelocity,...
+        'm',opt.mach,'notMach',opt.notMach,...
         'isOpening',isOpening);%,'coeffDamping',para(i).opt.coeffDamping,
     pressure = [pressure1,pressure2];
     plus1 = calcPuls(pressure1,dcpss);
@@ -422,6 +489,7 @@ for i = 1:iteCount
 
     multFreAmpValue = calcWaveFreAmplitude(pressure,Fs,multFre,'freErr',1);
     temp = eval(sprintf('%s(i)',IteratorValueName));
+    calcDatas{dataCount,indexName} = temp;
     calcDatas{dataCount,rawIndex} = pressure;
     calcDatas{dataCount,xIndex} = X;
     calcDatas{dataCount,plusIndex} = plus;
@@ -441,6 +509,18 @@ for i = 1:iteCount
     calcDatas{dataCount,indexlb1} = vhpicStruct.lb1;
     calcDatas{dataCount,indexla1} = vhpicStruct.la1;
     calcDatas{dataCount,indexInput} = vhpicStruct.la1;
+    dataCount = dataCount + 1;
 end
 
 end
+
+function param = setDataInStruct(param,data,dataName,iteNum)
+    if length(data) > 1
+        for i = 1:iteNum
+            eval(sprintf('param(i).%s = data(i);',dataName));
+        end
+    else
+        eval(sprintf('[param(1:iteNum).%s] = deal(data);',dataName));
+    end
+end
+
