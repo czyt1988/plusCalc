@@ -6,7 +6,7 @@ currentPath = fileparts(mfilename('fullpath'));
 rcv = 0.11;% 相对余隙容积
 pressureRadio=1.5;%压力比（排气压力/吸气压力）
 k=1.4;%绝热指数
-DCylinder=250/1000;%缸径m
+DCylinder=326/1000;%缸径m
 dPipe=98/1000;%管内径m
 crank=140/1000;%曲柄长
 connectingRod=1.075;%连杆长度
@@ -78,20 +78,20 @@ plotSpectrum(fre,amp,'isFill',1);
 xlim([0,100]);
 set(gcf,'color','w');
 
-%% 导出txt
-% fid = fopen(fullfile(currentPath,sprintf('northZone_300rpm_0.1MPa-%.4g.txt',meanMassFlow_300)),'w');
-% if fid>0
-%     for i=1:length(massFlow_300)
-%         fprintf(fid,'%g,%g\r\n',time_300(i),massFlow_300(i));
-%     end
-%     fclose(fid);
-% end
-% fid = fopen(fullfile(currentPath,sprintf('northZone_420rpm_0.05MPa-%.4g.txt',meanMassFlow_420)),'w');
-% if fid>0
-%     for i=1:length(massFlow_420)
-%         fprintf(fid,'%g,%g\r\n',time_420(i),massFlow_420(i));
-%     end
-%     fclose(fid);
-% end
+% 导出txt
+fid = fopen(fullfile(currentPath,sprintf('northZone_300rpm_0.1MPa-%.4g.txt',meanMassFlow_300)),'w');
+if fid>0
+    for i=1:length(massFlow_300)
+        fprintf(fid,'%g,%g\r\n',time_300(i),massFlow_300(i));
+    end
+    fclose(fid);
+end
+fid = fopen(fullfile(currentPath,sprintf('northZone_420rpm_0.05MPa-%.4g.txt',meanMassFlow_420)),'w');
+if fid>0
+    for i=1:length(massFlow_420)
+        fprintf(fid,'%g,%g\r\n',time_420(i),massFlow_420(i));
+    end
+    fclose(fid);
+end
 
 
