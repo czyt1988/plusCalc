@@ -129,7 +129,7 @@ for i = 1:length(variant_Lv1)
     para(i).vhpicStruct.xSection2 = [0,ones(1,sectionNum2).*(l/(sectionNum2))];
     para(i).sectionL1 = 0:0.25:para(i).L1;
     para(i).sectionL2 = 0:0.25:para(i).L2;
-    para(i).vhpicStruct.lv1 = para(i).vhpicStruct.Lv./2-0.232;%232
+    para(i).vhpicStruct.lv1 = para(i).vhpicStruct.Lv./2-0.232;%232%不随腔体长度变化而变化
     para(i).vhpicStruct.lv2 = 0;%出口不偏置
     para(i).vhpicStruct.Dbias = 0;%无内插管
 

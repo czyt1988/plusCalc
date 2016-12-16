@@ -82,11 +82,11 @@ opt.isUseStaightPipe = 1;%计算容器传递矩阵的方法
 opt.mach = opt.meanFlowVelocity / opt.acousticVelocity;
 opt.notMach = 1;
 
-variant_n1 = [28];              %variant_n = [6,6];sectionNum1 =[1,6];%对应孔1的组数sectionNum2 =[1,1];%对应孔2的组数
+variant_n1 = [68];              %variant_n = [6,6];sectionNum1 =[1,6];%对应孔1的组数sectionNum2 =[1,1];%对应孔2的组数
 sectionNum1 =[1];%对应孔1的组数
 sectionNum2 =[1];%对应孔2的组数
-variant_n2 = [28];
-variant_lp2 = [0.12];
+variant_n2 = [68];
+variant_lp2 = [0.16];
 calcDatas = {};
 
 
@@ -94,29 +94,29 @@ for i = 1:length(variant_n1)
     para(i).opt = opt;
     para(i).L1 = 3.5;%L1(m)
     para(i).L2 = 6;%L2（m）长度
-    para(i).Dpipe = 0.098;%管道直径（m）
+    para(i).Dpipe = 0.106;%管道直径（m）
     para(i).vhpicStruct.l = 0.01;
     para(i).vhpicStruct.Dv = 0.372;%缓冲罐的直径（m）
     para(i).vhpicStruct.Lv1 = 1.1/2;%缓冲罐腔1总长
     para(i).vhpicStruct.Lv2 = 1.1/2;%缓冲罐腔2总长
     para(i).vhpicStruct.lc = 0.005;%内插管壁厚
-    para(i).vhpicStruct.dp1 = 0.020;%开孔径
-    para(i).vhpicStruct.dp2 = 0.020;%开孔径
-    para(i).vhpicStruct.Lin = 0.20;%内插管入口段长度
-    para(i).vhpicStruct.lp1 = 0.12;%内插管入口段非孔管开孔长度
+    para(i).vhpicStruct.dp1 = 0.013;%开孔径
+    para(i).vhpicStruct.dp2 = 0.013;%开孔径
+    para(i).vhpicStruct.Lin = 0.25;%内插管入口段长度
+    para(i).vhpicStruct.lp1 = 0.16;%内插管入口段非孔管开孔长度
     para(i).vhpicStruct.lp2 = variant_lp2(i);%内插管出口段孔管开孔长度
     para(i).vhpicStruct.n1 = variant_n1(i);%入口段孔数
     para(i).vhpicStruct.n2 = variant_n2(i);%出口段孔数
     para(i).vhpicStruct.la1 = 0.03;%孔管入口段靠近入口长度
-    para(i).vhpicStruct.la2 = 0.05;%孔管
-    para(i).vhpicStruct.lb1 = 0.05;
+    para(i).vhpicStruct.la2 = 0.06;%孔管
+    para(i).vhpicStruct.lb1 = 0.06;
     para(i).vhpicStruct.lb2 = 0.03;
-    para(i).vhpicStruct.Din = 0.106;
-    para(i).vhpicStruct.Lout = 0.20;
+    para(i).vhpicStruct.Din = 0.048;
+    para(i).vhpicStruct.Lout = 0.25;
     para(i).vhpicStruct.bp1 = variant_n1.*(para(i).vhpicStruct.dp1)^2./(4.*para(i).vhpicStruct.Din.*para(i).vhpicStruct.lp1);%开孔率
     para(i).vhpicStruct.bp2 = variant_n2.*(para(i).vhpicStruct.dp2)^2./(4.*para(i).vhpicStruct.Din.*para(i).vhpicStruct.lp2);%开孔率
-    para(i).vhpicStruct.nc1 = 7;%假设一圈有8个孔
-    para(i).vhpicStruct.nc2 = 7;%假设一圈有8个孔
+    para(i).vhpicStruct.nc1 = 8;%假设一圈有8个孔
+    para(i).vhpicStruct.nc2 = 8;%假设一圈有8个孔
     para(i).vhpicStruct.Cloum1 = variant_n1./para(i).vhpicStruct.nc1;%计算一端固定开孔长度的孔管上能开多少圈孔
     para(i).vhpicStruct.Cloum2 = variant_n2./para(i).vhpicStruct.nc2;
     para(i).vhpicStruct.s1 = ((para(i).vhpicStruct.lp1./para(i).vhpicStruct.Cloum1)-para(i).vhpicStruct.dp1)./2;%相邻两开孔之间间隔，默认等间隔

@@ -1,5 +1,5 @@
-function M = vesselHaveInnerPerfBothClosedCompTransferMatrix(Dpipe,Dv,l,Lv,...
-    lc,dp,lp1,lp2,n1,n2,la1,la2,lb1,lb2,Din,xSection1,xSection2,varargin)
+function M = vesselHaveInnerPerfBothClosedCompTransferMatrix(Dpipe,Dv,l,Lv1,Lv2,...
+    lc,dp1,dp2,lp1,lp2,n1,n2,la1,la2,lb1,lb2,Din,xSection1,xSection2,varargin)
 %缓冲罐中间插入孔管,两端堵死，开孔个数不足以等效为亥姆霍兹共鸣器
 %      L1     l                 Lv              l    L2  
 %              _________________________________        
@@ -34,14 +34,9 @@ isDamping = 1;%默认使用阻尼
 coeffDamping = nan;
 coeffFriction = nan;
 meanFlowVelocity = nan;
-isUseStaightPipe = 1;%使用直管理论代替缓冲罐，那么缓冲罐时相当于三个直管拼接
-mach = nan;
 notMach = 0;%强制不使用mach
-R0 = 0.0055;%计算孔管声阻抗率用到的系数
-coeffM1 = nan;%孔管马赫数
-coeffM2 = nan;%缓冲罐马赫数
 while length(pp)>=2
-    prop =pp{1};
+        prop =pp{1};
     val=pp{2};
     pp=pp(3:end);
     switch lower(prop)
@@ -71,23 +66,13 @@ while length(pp)>=2
             meanFlowVelocity = val;
         case 'flowvelocity' %平均流
             meanFlowVelocity = val;
-        case 'isusestaightpipe'
-            isUseStaightPipe = val;%使用直管理论替代
-        case 'usestaightpipe'
-            isUseStaightPipe = val;
-        case 'm1'
-            coeffM1 = val;
-        case 'm2'
-            coeffM2 = val;
-        case 'mach' %管道马赫数，加入马赫数将会使用带马赫数的公式计算
-            mach = val;
         case 'notmach'
             notMach = val;
         otherwise
        		error('参数错误%s',prop);
     end
 end
-
+% 
 if isnan(a)
     error('声速必须定义');
 end
@@ -107,6 +92,7 @@ Sv = pi .* Dv.^2 ./ 4;%缓冲罐截面积
 Sp = pi*Din.^2./4;%孔管管径截面积
 Sv_p = Sv-Sp;%去除孔管的缓冲罐截面积
 Dv_inner = (4*Sv_p/pi).^0.5;%计算名义直径
+mfvStraight = nan;
 mfvVessel = nan;
 mfvInnerPipe = nan;
 mfvVessel_Inner = nan;
@@ -159,21 +145,8 @@ if isDamping
 end
 
 
-if ~notMach%允许使用马赫,mach(1)直管mach，mach(2)缓冲罐mach:mach(3)带内插管的缓冲罐的mach:mach(4)内插管的mach
-    if isnan(mach)
-        if ~isnan(meanFlowVelocity)
-            mach = meanFlowVelocity./a;
-        end
-    elseif(length(mach) == 1)
-          mach(2) = meanFlowVelocity(2)/a;
-    elseif(length(mach) == 2)
-          mach(3) = meanFlowVelocity(3)/a;
-    elseif(length(mach) == 3)
-          mach(4) = meanFlowVelocity(4)/a;
-    end
-else
-    mach = nan;
-end
+mach = meanFlowVelocity./a;%马赫,mach(1)直管mach，mach(2)缓冲罐mach:mach(3)带内插管的缓冲罐的mach:mach(4)内插管的mach
+
 optMach.notMach = notMach;
 optMach.machStraight = mach(1);
 optMach.machVessel = mach(2);
@@ -181,17 +154,27 @@ optMach.machVesselWithInnerPipe = mach(3);
 optMach.machInnerPipe = mach(4);
 
 optDamping.isDamping = isDamping;
-optDamping.coeffDampStraight = coeffDamping(1);
-optDamping.mfvStraight = meanFlowVelocity(1);
-
-optDamping.coeffDampVessel = coeffDamping(2);%缓冲罐的阻尼系数
-optDamping.mfvVessel = meanFlowVelocity(2);
-
-optDamping.coeffDampVesselWithInnerPipe = coeffDamping(3);%缓冲罐的阻尼系数
-optDamping.mfvVesselWithInnerPipe = meanFlowVelocity(3);
-
-optDamping.coeffDampInnerPipe = coeffDamping(4);%缓冲罐的阻尼系数
-optDamping.mfvInnerPipe = meanFlowVelocity(4);
+if isDamping
+    optDamping.coeffDampStraight = coeffDamping(1);
+    optDamping.coeffDampVessel = coeffDamping(2);%缓冲罐的阻尼系数
+    optDamping.coeffDampVesselWithInnerPipe = coeffDamping(3);%缓冲罐的阻尼系数
+    optDamping.coeffDampInnerPipe = coeffDamping(4);%缓冲罐的阻尼系数
+    
+    optDamping.mfvStraight = meanFlowVelocity(1);
+    optDamping.mfvVessel = meanFlowVelocity(2);
+    optDamping.mfvVesselWithInnerPipe = meanFlowVelocity(3);
+    optDamping.mfvInnerPipe = meanFlowVelocity(4);
+else
+    optDamping.coeffDampStraight = nan;
+    optDamping.coeffDampVessel = nan;%缓冲罐的阻尼系数
+    optDamping.coeffDampVesselWithInnerPipe = nan;%缓冲罐的阻尼系数
+    optDamping.coeffDampInnerPipe = nan;%缓冲罐的阻尼系数
+    
+    optDamping.mfvStraight = mfvStraight;
+    optDamping.mfvVessel = mfvVessel;
+    optDamping.mfvVesselWithInnerPipe = mfvVessel_Inner;
+    optDamping.mfvInnerPipe = mfvInnerPipe;
+end
 
 
 
@@ -202,13 +185,13 @@ M2 = straightPipeTransferMatrix(l,'k',k,'d',Dpipe,'a',a...
       ,'isDamping',isDamping,'coeffDamping',coeffDamping(1) ...
         ,'mach',optMach.machStraight,'notmach',optMach.notMach);
     
-Mv = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv,...
-    lc,dp,lp1,lp2,n1,n2,la1,la2,lb1,lb2,Din,xSection1,xSection2,optDamping,optMach);
+Mv = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv1,Lv2,...
+    lc,dp1,dp2,lp1,lp2,n1,n2,la1,la2,lb1,lb2,Din,xSection1,xSection2,optDamping,optMach);
 M = M2 * Mv * M1 ;
 
 end
-function M = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv ...
-    ,lc,dp,lp1,lp2,n1,n2,la1,la2,lb1,lb2,Din,xSection1,xSection2,optDamping,optMach)
+function M = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv1,Lv2 ...
+    ,lc,dp1,dp2,lp1,lp2,n1,n2,la1,la2,lb1,lb2,Din,xSection1,xSection2,optDamping,optMach)
 %缓冲罐中间插入孔管,两端堵死，开孔个数不足以等效为亥姆霍兹共鸣器
 %      L1     l                 Lv              l    L2  
 %              _________________________________        
@@ -248,13 +231,15 @@ function M = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv ...
     % 缓冲罐内不含孔管的部分
     Lin = la1 + lp1 + la2;
     Lout = lb1 + lp2 + lb2;
-    Lv1 = Lv/2 - Lin;%缓冲罐内插孔管无交接的区域长
-    Lv2 = Lv/2 - Lout;%缓冲罐内插孔管无交接的区域长
-   
-    if ((Lv1 < 0))
-        error('长度尺寸有误');
-    end
-    Mv2 = straightPipeTransferMatrix(Lv2,'k',k,'d',Dv,'a',a,...
+%     Lv1 = Lv/2 - Lin;%缓冲罐内插孔管无交接的区域长
+%     Lv2 = Lv/2 - Lout;%缓冲罐内插孔管无交接的区域长
+%    
+%     if ((Lv1 < 0))
+%         error('长度尺寸有误');
+%     end
+    Cav1 = Lv1 - Lin;%腔1非环形部分
+    Cav2 = Lv2 - Lout;%腔2非环形部分
+    Mv2 = straightPipeTransferMatrix(Cav2,'k',k,'d',Dv,'a',a,...
                 'isDamping',optDamping.isDamping,'coeffDamping',optDamping.coeffDampVessel...
                 ,'mach',optMach.machVessel,'notmach',optMach.notMach);
     %lb2处对应的缓冲罐腔室
@@ -262,7 +247,7 @@ function M = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv ...
                 'isDamping',optDamping.isDamping,'coeffDamping',optDamping.coeffDampVesselWithInnerPipe...
                 ,'mach',optMach.machVesselWithInnerPipe,'notmach',optMach.notMach);
     %内插孔管出口段对应lp2
-    Mp2 = innerPerfPipeOpenTransferMatrix(n2,dp,Din,Dv,lp2,lc,lb1,lb2,xSection2...
+    Mp2 = innerPerfPipeOpenTransferMatrix(n2,dp2,Din,Dv,lp2,lc,lb1,lb2,xSection2...
         ,'k',k,'a',a,'meanflowvelocity',optDamping.mfvInnerPipe...
         ,'M1',optMach.machInnerPipe,'M2',optMach.machVesselWithInnerPipe);
     %内插孔管隔板区对应la2+lb1
@@ -270,7 +255,7 @@ function M = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv ...
                 'isDamping',optDamping.isDamping,'coeffDamping',optDamping.coeffDampInnerPipe...
                 ,'mach',optMach.machInnerPipe,'notmach',optMach.notMach);
     %内插孔管入口段对应lp1
-    Mp1 = innerPerfPipeOpenInletClosedTransferMatrix(n1,dp,Din,Dv,lp1,lc,la1,la2,xSection1...
+    Mp1 = innerPerfPipeOpenInletClosedTransferMatrix(n1,dp1,Din,Dv,lp1,lc,la1,la2,xSection1...
         ,'k',k,'a',a,'meanflowvelocity',optDamping.mfvInnerPipe...
         ,'M1',optMach.machInnerPipe,'M2',optMach.machVesselWithInnerPipe);
     %内插孔管与进口管连接部分对应la1
@@ -278,7 +263,7 @@ function M = haveInnerPerforatedPipeBCCompTransferMatrix(a,k,Dv,Dv_inner,Lv ...
                 'isDamping',optDamping.isDamping,'coeffDamping',optDamping.coeffDampInnerPipe...
                 ,'mach',optMach.machInnerPipe,'notmach',optMach.notMach);
     %入口孔管前端开放空腔对应
-    Mv1 = straightPipeTransferMatrix(Lv1,'k',k,'d',Dv,'a',a,...
+    Mv1 = straightPipeTransferMatrix(Cav1,'k',k,'d',Dv,'a',a,...
                 'isDamping',optDamping.isDamping,'coeffDamping',optDamping.coeffDampVessel...
                 ,'mach',optMach.machVessel,'notmach',optMach.notMach);
       
